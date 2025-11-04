@@ -75,7 +75,7 @@ TripEaseJava/
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-username/ATA-Project.git
+   git clone https://github.com/jacejoji/TripEaseJava.git
 Import into your IDE as a Java project.
 
 Configure database connection in DBUtil.java.
