@@ -4,6 +4,60 @@ import com.ust.bean.*;
 import java.util.ArrayList;
 
 public class Data {
+	// Create fake data for users
+	public static ArrayList<CredentialsBean> getLoginData() {
+		ArrayList<CredentialsBean> userList = new ArrayList<>();
+	CredentialsBean user1 = new CredentialsBean();
+	user1.setUserID("customer");
+	user1.setPassword("password1");
+	user1.setUserType("Customer");
+	user1.setLoginStatus(1);
+	userList.add(user1);
+	CredentialsBean user2 = new CredentialsBean();
+	user2.setUserID("admin");
+	user2.setPassword("password2");
+	user2.setUserType("Administrator");
+	user2.setLoginStatus(1);
+	userList.add(user2);
+	return userList;
+	}
+	
+	//Create fake profile data for user
+	public static ArrayList<ProfileBean> getProfileData() {
+		ArrayList<ProfileBean> profileList = new ArrayList<>();
+		ProfileBean profile1 = new ProfileBean();
+		profile1.setUserID("customer");
+		profile1.setFirstName("John Doe");
+		profile1.setLastName("Doe");
+		profile1.setDateOfBirth("1990-01-01");
+		profile1.setGender("Male");
+		profile1.setStreet("123 Main St");
+		profile1.setLocation("New York");
+		profile1.setCity("New York");
+		profile1.setState("NY");
+		profile1.setPincode("10001");
+		profile1.setMobileNo("1234567890");
+		profile1.setEmailID("jdoe@ust");
+		profile1.setPassword("password1");
+		profileList.add(profile1);
+		
+		ProfileBean profile2 = new ProfileBean();
+		profile2.setUserID("admin");
+		profile2.setFirstName("Jane Doe");
+		profile2.setLastName("Doe");
+		profile2.setDateOfBirth("1990-01-01");
+		profile2.setGender("Female");
+		profile2.setStreet("456 Main St");
+		profile2.setLocation("Los Angeles");
+		profile2.setCity("Los Angeles");
+		profile2.setState("CA");
+		profile2.setPincode("90001");
+		profile2.setMobileNo("9876543210");
+		profile2.setEmailID("jdoe@ust");
+		profile2.setPassword("password2");
+		profileList.add(profile2);
+		return profileList;
+	}
 
     // Create fake data for vehicles
     public static ArrayList<VehicleBean> getVehicleData() {

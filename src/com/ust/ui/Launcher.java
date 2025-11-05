@@ -1,9 +1,7 @@
 package com.ust.ui;
-import com.ust.bean.DriverBean;
-import com.ust.bean.ReservationBean;
-import com.ust.bean.RouteBean;
-import com.ust.bean.VehicleBean;
-import com.ust.dao.TripEaseDAO;
+import com.ust.bean.*;
+
+import com.ust.dao.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -11,9 +9,27 @@ public class Launcher {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         TripEaseDAO tripEaseDAO = new TripEaseDAO();
+        AdministratorDAO administratorDAO = new AdministratorDAO();
+		CustomerDAO customerDAO = new CustomerDAO();
 
         // Display the main menu
-        System.out.println("Welcome to the Automation of Travel Agency (ATA) System");
+        System.out.println("!!!Welcome to TripEase!!! \nAutomation of Travel Agency (ATA) System");
+        System.out.println("===================================");
+        
+        //Authentication
+		System.out.println("Enter userID:");
+		String userID = scanner.nextLine();
+		System.out.println("Enter password:");
+		String password = scanner.nextLine();
+		CredentialsBean user = tripEaseDAO.login(userID, password);
+		if (user == null) {
+			System.out.println("Invalid userID or password. Please try again.");
+			return;
+		}
+		System.out.println("Login successful!");
+		
+		//displaying user profile
+		System.out.println(tripEaseDAO.viewProfile(userID));
 
         // Example: Administrator actions
         System.out.println("\nAdministrator: Adding a new vehicle");
@@ -23,11 +39,11 @@ public class Launcher {
         newVehicle.setType("SUV");
         newVehicle.setSeatingCapacity(5);
         newVehicle.setFarePerKM(18.0);
-        System.out.println(tripEaseDAO.addVehicle(newVehicle));
+        System.out.println(administratorDAO.addVehicle(newVehicle));
 
         // Admin views all vehicles
         System.out.println("\nAdministrator: Viewing all vehicles by type SUV");
-        ArrayList<VehicleBean> allVehicles = tripEaseDAO.viewVehiclesByType("SUV");
+        ArrayList<VehicleBean> allVehicles = customerDAO.viewVehiclesByType("SUV");
         for (VehicleBean vehicle : allVehicles) {
             System.out.println(vehicle.getName() + " | Type: " + vehicle.getType() + " | Seating: " + vehicle.getSeatingCapacity());
         }
@@ -36,7 +52,7 @@ public class Launcher {
         System.out.println("\nAdministrator: Deleting a vehicle");
         ArrayList<String> vehicleIDsToDelete = new ArrayList<>();
         vehicleIDsToDelete.add("VH001");
-        System.out.println("Deleted vehicles: " + tripEaseDAO.deleteVehicle(vehicleIDsToDelete));
+        System.out.println("Deleted vehicles: " + administratorDAO.deleteVehicle(vehicleIDsToDelete));
 
         // Admin adds a new route
         System.out.println("\nAdministrator: Adding a new route");
@@ -46,11 +62,11 @@ public class Launcher {
         newRoute.setDestination("Chicago");
         newRoute.setDistance(790);
         newRoute.setTravelDuration(12);
-        System.out.println(tripEaseDAO.addRoute(newRoute));
+        System.out.println(administratorDAO.addRoute(newRoute));
 
         // Admin views routes
         System.out.println("\nAdministrator: Viewing all routes");
-        ArrayList<RouteBean> allRoutes = tripEaseDAO.viewAllRoutes();
+        ArrayList<RouteBean> allRoutes = customerDAO.viewAllRoutes();
         for (RouteBean route : allRoutes) {
             System.out.println("Route: " + route.getSource() + " to " + route.getDestination() + " | Distance: " + route.getDistance() + " KM");
         }
@@ -67,7 +83,7 @@ public class Launcher {
         newDriver.setPincode("33101");
         newDriver.setMobileNo("5555555555");
         newDriver.setLicenseNumber("LIC987654");
-        System.out.println(tripEaseDAO.addDriver(newDriver));
+        System.out.println(administratorDAO.addDriver(newDriver));
 
         // Customer makes a booking
         System.out.println("\nCustomer: Booking a vehicle");
@@ -83,32 +99,32 @@ public class Launcher {
         reservation.setTotalFare(250.0);
         reservation.setBoardingPoint("Times Square");
         reservation.setDropPoint("National Mall");
-        System.out.println("Booking ID: " + tripEaseDAO.bookVehicle(reservation));
+        System.out.println("Booking ID: " + customerDAO.bookVehicle(reservation));
 
         // Customer views booking details
         System.out.println("\nCustomer: Viewing booking details");
-        ReservationBean bookingDetails = tripEaseDAO.viewBookingDetails("RS005");
+        ReservationBean bookingDetails = customerDAO.viewBookingDetails("RS005");
         System.out.println("Reservation ID: " + bookingDetails.getReservationID());
         System.out.println("Booking Status: " + bookingDetails.getBookingStatus());
 
         // Customer cancels a booking
         System.out.println("\nCustomer: Canceling a booking");
-        System.out.println("Canceling booking RS005: " + tripEaseDAO.cancelBooking("U001", "RS005"));
+        System.out.println("Canceling booking RS005: " + customerDAO.cancelBooking("U001", "RS005"));
 
         // Admin assigns a driver to the booking
         System.out.println("\nAdministrator: Allotting a driver to a booking");
-        System.out.println("Assigning driver to booking RS005: " + tripEaseDAO.allotDriver("RS005", "DR005"));
+        System.out.println("Assigning driver to booking RS005: " + administratorDAO.allotDriver("RS005", "DR005"));
 
         // Final list of vehicles (This will display all current vehicles in the system)
-        System.out.println("\nFinal List of Vehicles:");
-        allVehicles = tripEaseDAO.viewVehiclesByType("SUV");
+        System.out.println("\nFinal List of SUV Vehicles :");
+        allVehicles = customerDAO.viewVehiclesByType("SUV");
         for (VehicleBean vehicle : allVehicles) {
             System.out.println(vehicle.getName() + " | Type: " + vehicle.getType() + " | Seating: " + vehicle.getSeatingCapacity());
         }
 
      // Final list of bookings (Including canceled bookings)
         System.out.println("\nFinal List of Bookings (including canceled):");
-        ArrayList<ReservationBean> allBookings = tripEaseDAO.getAllBookings();
+        ArrayList<ReservationBean> allBookings = administratorDAO.getAllBookings();
         for (ReservationBean booking : allBookings) {
             System.out.println("Reservation ID: " + booking.getReservationID() + " | Status: " + booking.getBookingStatus());
         }

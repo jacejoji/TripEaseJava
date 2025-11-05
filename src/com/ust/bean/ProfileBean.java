@@ -1,6 +1,13 @@
 package com.ust.bean;
 
 public class ProfileBean {
+	@Override
+	public String toString() {
+		return "Profile userID=" + userID + "\n firstName=" + firstName + "\n lastName=" + lastName
+				+ "\n dateOfBirth=" + dateOfBirth + "\n gender=" + gender + "\n street=" + street + "\n location="
+				+ location + "\n city=" + city + "\n state=" + state + "\n pincode=" + pincode + "\n mobileNo=" + mobileNo
+				+ "\n emailID=" + emailID ;
+	}
 	private String userID;
     private String firstName;
     private String lastName;
