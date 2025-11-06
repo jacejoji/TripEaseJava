@@ -12,13 +12,11 @@ import com.ust.service.Customer;
 import com.ust.util.Data;
 
 public class CustomerDAO  implements Customer{
-	private ArrayList<VehicleBean> vehicleList = Data.getVehicleData();
-    private ArrayList<DriverBean> driverList = Data.getDriverData();
-    private ArrayList<RouteBean> routeList = Data.getRouteData();
-    private ArrayList<ReservationBean> reservationList = Data.getReservationData();
-    private ArrayList<CredentialsBean> userList = Data.getLoginData();
-    private ArrayList<ProfileBean> profileList = Data.getProfileData();
-    
+ public static ArrayList<VehicleBean> vehicleList = TripEaseDAO.vehicleList;
+  public static ArrayList<DriverBean> driverList = Data.getDriverData();
+  public static ArrayList<RouteBean> routeList = Data.getRouteData();
+  public static ArrayList<ReservationBean> reservationList = Data.getReservationData();
+  
     @Override
     public ArrayList<VehicleBean> viewVehiclesByType(String vehicleType) {
         ArrayList<VehicleBean> result = new ArrayList<>();
@@ -28,6 +26,9 @@ public class CustomerDAO  implements Customer{
             }
         }
         return result;
+    }
+    public ArrayList<VehicleBean> viewVehicles() {
+		return new ArrayList<>(vehicleList);
     }
     @Override
     public ArrayList<VehicleBean> viewVehicleBySeats(int noOfSeats) {
@@ -67,7 +68,6 @@ public class CustomerDAO  implements Customer{
         }
         return null;
     }
-
     @Override
     public ReservationBean printBookingDetails(String reservationID) {
         return viewBookingDetails(reservationID); // Return the booking details for printing

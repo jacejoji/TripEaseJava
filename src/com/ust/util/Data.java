@@ -1,12 +1,11 @@
 package com.ust.util;
-
 import com.ust.bean.*;
 import java.util.ArrayList;
 
 public class Data {
 	// Create fake data for users
 	public static ArrayList<CredentialsBean> getLoginData() {
-		ArrayList<CredentialsBean> userList = new ArrayList<>();
+	ArrayList<CredentialsBean> userList = new ArrayList<>();
 	CredentialsBean user1 = new CredentialsBean();
 	user1.setUserID("customer");
 	user1.setPassword("password1");

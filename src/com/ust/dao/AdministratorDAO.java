@@ -12,18 +12,15 @@ import com.ust.service.Administrator;
 import com.ust.util.Data;
 
 public class AdministratorDAO  implements Administrator{
-	 	private ArrayList<VehicleBean> vehicleList = Data.getVehicleData();
-	    private ArrayList<DriverBean> driverList = Data.getDriverData();
-	    private ArrayList<RouteBean> routeList = Data.getRouteData();
-	    private ArrayList<ReservationBean> reservationList = Data.getReservationData();
-	    private ArrayList<CredentialsBean> userList = Data.getLoginData();
-	    private ArrayList<ProfileBean> profileList = Data.getProfileData();
+	 	public static ArrayList<VehicleBean> vehicleList = Data.getVehicleData();
+	    public static ArrayList<DriverBean> driverList = Data.getDriverData();
+	    public static ArrayList<RouteBean> routeList = Data.getRouteData();
+	    public static ArrayList<ReservationBean> reservationList = Data.getReservationData();
 	    @Override
 	    public String addVehicle(VehicleBean vehicleBean) {
 	        vehicleList.add(vehicleBean);
 	        return "Vehicle added successfully";
 	    }
-
 	    @Override
 	    public int deleteVehicle(ArrayList<String> vehicleIDs) {
 	        int count = 0;

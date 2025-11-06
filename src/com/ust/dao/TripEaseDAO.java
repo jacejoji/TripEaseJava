@@ -7,14 +7,13 @@ import com.ust.service.*;
 import com.ust.util.Data;  
 
 public class TripEaseDAO {
-
     // Fetching data from DataUtil
-    private ArrayList<VehicleBean> vehicleList = Data.getVehicleData();
-    private ArrayList<DriverBean> driverList = Data.getDriverData();
-    private ArrayList<RouteBean> routeList = Data.getRouteData();
-    private ArrayList<ReservationBean> reservationList = Data.getReservationData();
-    private ArrayList<CredentialsBean> userList = Data.getLoginData();
-    private ArrayList<ProfileBean> profileList = Data.getProfileData();
+    public static ArrayList<CredentialsBean> userList = Data.getLoginData();
+    public static ArrayList<ProfileBean> profileList = Data.getProfileData();
+    public static ArrayList<VehicleBean> vehicleList = Data.getVehicleData();
+    public static ArrayList<DriverBean> driverList = Data.getDriverData();
+    public static ArrayList<RouteBean> routeList = Data.getRouteData();
+    public static ArrayList<ReservationBean> reservationList = Data.getReservationData();
     
     //User authentication
 	public CredentialsBean login(String userID, String password) {
