@@ -1,96 +1,100 @@
 package com.ust.ui;
-import com.ust.dao.*;
-import com.ust.bean.*;
+
+import com.ust.dao.TripEaseDAO;
+import com.ust.bean.CredentialsBean;
+
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
 
 public class Launcher {
-	
     private JFrame frame;
-    private JTextField userIDField, passwordField;
+    private JTextField userIDField;
+    private JPasswordField passwordField;
     private JTextArea outputArea;
-    private TripEaseDAO tripEaseDAO = new TripEaseDAO();
+    private final TripEaseDAO tripEaseDAO = new TripEaseDAO();
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            try {
-                Launcher window = new Launcher();
-                window.frame.setVisible(true);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
+        SwingUtilities.invokeLater(() -> new Launcher().show());
     }
 
-    public Launcher() {
-        initialize();
-    }
-
-    private void initialize() {
-        // Initialize the frame
-        frame = new JFrame("Login - TripEase");
-        frame.setBounds(100, 100, 600, 400);
+    public void show() {
+        frame = new JFrame("TripEase - Login");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.getContentPane().setLayout(new BorderLayout(0, 0));
+        frame.setSize(900, 600);
+        frame.setLocationRelativeTo(null);
+        frame.setLayout(new BorderLayout());
 
-        // Panel for login form
-        JPanel loginPanel = new JPanel();
-        frame.getContentPane().add(loginPanel, BorderLayout.NORTH);
+        // Top banner
+        JLabel title = new JLabel("TripEase - Login", SwingConstants.CENTER);
+        title.setFont(new Font("SansSerif", Font.BOLD, 22));
+        frame.add(title, BorderLayout.NORTH);
 
-        JLabel lblUserID = new JLabel("UserID:");
-        loginPanel.add(lblUserID);
+        // Center: login form
+        JPanel form = new JPanel(new GridBagLayout());
+        GridBagConstraints gc = new GridBagConstraints();
+        gc.insets = new Insets(8, 8, 8, 8);
+        gc.fill = GridBagConstraints.HORIZONTAL;
 
-        userIDField = new JTextField();
-        loginPanel.add(userIDField);
-        userIDField.setColumns(10);
+        userIDField = new JTextField(20);
+        passwordField = new JPasswordField(20);
 
-        JLabel lblPassword = new JLabel("Password:");
-        loginPanel.add(lblPassword);
+        JButton loginBtn = new JButton("Login");
+        JButton changePwdBtn = new JButton("Change Password");
+        JButton logoutBtn = new JButton("Logout");
 
-        passwordField = new JTextField();
-        loginPanel.add(passwordField);
-        passwordField.setColumns(10);
+        int r = 0;
+        gc.gridx = 0; gc.gridy = r; form.add(new JLabel("User ID"), gc);
+        gc.gridx = 1; gc.gridy = r++; form.add(userIDField, gc);
 
-        JButton btnLogin = new JButton("Login");
-        loginPanel.add(btnLogin);
+        gc.gridx = 0; gc.gridy = r; form.add(new JLabel("Password"), gc);
+        gc.gridx = 1; gc.gridy = r++; form.add(passwordField, gc);
 
-        // Output area
-        outputArea = new JTextArea();
+        JPanel actions = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 0));
+        actions.add(loginBtn);
+        actions.add(changePwdBtn);
+        actions.add(logoutBtn);
+        gc.gridx = 0; gc.gridy = r; gc.gridwidth = 2;
+        form.add(actions, gc);
+
+        frame.add(form, BorderLayout.CENTER);
+
+        // Output / status area
+        outputArea = new JTextArea(6, 40);
         outputArea.setEditable(false);
-        JScrollPane scrollPane = new JScrollPane(outputArea);
-        frame.getContentPane().add(scrollPane, BorderLayout.CENTER);
+        frame.add(new JScrollPane(outputArea), BorderLayout.SOUTH);
 
-        // Login action
-        btnLogin.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String userID = userIDField.getText().trim();
-                String password = passwordField.getText().trim();
-                CredentialsBean user = tripEaseDAO.login(userID, password);
-                if (user == null) {
-                    outputArea.setText("Invalid userID or password. Please try again.");
-                } else {
-                    outputArea.setText("Login successful!\n" + tripEaseDAO.viewProfile(userID));
-                    // Proceed to the main screen after successful login
-                    showAdminMenu();
-                }
+        // Wire buttons
+        loginBtn.addActionListener(e -> {
+            String uid = userIDField.getText().trim();
+            String pwd = new String(passwordField.getPassword());
+            CredentialsBean user = tripEaseDAO.login(uid, pwd); // uses your current method
+            if (user == null) {
+                outputArea.setText("Invalid credentials.");
+                return;
+            }
+            outputArea.setText("Login success. UserType = " + user.getUserType());
+
+            frame.dispose();
+            if ("Administrator".equalsIgnoreCase(user.getUserType())) {
+                SwingUtilities.invokeLater(() -> new AdminDashboard(uid).setVisible(true));
+            } else {
+                SwingUtilities.invokeLater(() -> new CustomerDashboard(uid).setVisible(true));
             }
         });
-    }
 
-    private void showAdminMenu() {
-        // Close login screen and launch admin menu
-        frame.dispose();  // Close the login screen
-
-        // Create and display the main application screen (Administrator actions)
-        SwingUtilities.invokeLater(() -> {
-            try {
-                AdminDashboard adminScreen = new AdminDashboard();
-                adminScreen.setVisible(true);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        changePwdBtn.addActionListener(e -> {
+            outputArea.setText("Change password will use TripEaseDAO.changePassword(..). Implement in DAO and wire here.");
+            // Example once added:
+            // var cred = new CredentialsBean(); cred.setUserID(userIDField.getText()); cred.setPassword(currentPwd);
+            // String result = tripEaseDAO.changePassword(cred, newPwd);
         });
+
+        logoutBtn.addActionListener(e -> {
+            outputArea.setText("Logout will use TripEaseDAO.logout(..). Implement in DAO and wire here.");
+            // Example once added:
+            // boolean ok = tripEaseDAO.logout(currentUserId);
+        });
+
+        frame.setVisible(true);
     }
 }

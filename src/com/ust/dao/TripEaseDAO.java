@@ -18,13 +18,26 @@ public class TripEaseDAO {
     //User authentication
 	public CredentialsBean login(String userID, String password) {
 		for (CredentialsBean user : userList) {
-			if (user.getUserID().equals(userID) && user.getPassword().equals(password)) {
-				return user;
+
+			// Check user id
+			if (user.getUserID().equals(userID)) {
+
+				// Check password
+				if (user.getPassword().equals(password)) {
+
+					// Mark logged in
+					user.setLoginStatus(1);
+
+					// VERY IMPORTANT: return the user with correct userType
+					return user;
+				} else {
+					return null; // password mismatch
+				}
 			}
 		}
-		return null;
+		return null; // user not found
 	}
-	
+
 	//View Profile
 	public ProfileBean viewProfile(String userID) {
 		for (ProfileBean profile : profileList) {

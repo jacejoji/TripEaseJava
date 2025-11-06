@@ -11,11 +11,10 @@ import com.ust.bean.VehicleBean;
 import com.ust.service.Customer;
 import com.ust.util.Data;
 
+import static com.ust.dao.TripEaseDAO.*;
+
 public class CustomerDAO  implements Customer{
- public static ArrayList<VehicleBean> vehicleList = TripEaseDAO.vehicleList;
-  public static ArrayList<DriverBean> driverList = Data.getDriverData();
-  public static ArrayList<RouteBean> routeList = Data.getRouteData();
-  public static ArrayList<ReservationBean> reservationList = Data.getReservationData();
+
   
     @Override
     public ArrayList<VehicleBean> viewVehiclesByType(String vehicleType) {

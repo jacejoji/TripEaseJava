@@ -10,12 +10,9 @@ import com.ust.bean.RouteBean;
 import com.ust.bean.VehicleBean;
 import com.ust.service.Administrator;
 import com.ust.util.Data;
+import static com.ust.dao.TripEaseDAO.*;
 
 public class AdministratorDAO  implements Administrator{
-	 	public static ArrayList<VehicleBean> vehicleList = Data.getVehicleData();
-	    public static ArrayList<DriverBean> driverList = Data.getDriverData();
-	    public static ArrayList<RouteBean> routeList = Data.getRouteData();
-	    public static ArrayList<ReservationBean> reservationList = Data.getReservationData();
 	    @Override
 	    public String addVehicle(VehicleBean vehicleBean) {
 	        vehicleList.add(vehicleBean);
