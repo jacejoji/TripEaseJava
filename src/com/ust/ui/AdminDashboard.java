@@ -466,7 +466,6 @@ public class AdminDashboard extends JFrame {
         );
         return FormUtils.section("View Bookings by Date & Route", f, search, new JScrollPane(bookingsTable));
     }
-
     // ---------------------- UTIL ----------------------
 
     private JComponent wrapTable(String title, JTable table) {

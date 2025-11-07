@@ -1,6 +1,11 @@
 package com.ust.bean;
 
 public class CredentialsBean {
+	@Override
+	public String toString() {
+		return "userID=" + userID + ", password=" + password + ", userType=" + userType
+				+ ", loginStatus=" + loginStatus;
+	}
 	private String userID;
     private String password;
     private String userType;

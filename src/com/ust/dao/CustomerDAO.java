@@ -14,8 +14,6 @@ import com.ust.util.Data;
 import static com.ust.dao.TripEaseDAO.*;
 
 public class CustomerDAO  implements Customer{
-
-  
     @Override
     public ArrayList<VehicleBean> viewVehiclesByType(String vehicleType) {
         ArrayList<VehicleBean> result = new ArrayList<>();
@@ -71,4 +69,10 @@ public class CustomerDAO  implements Customer{
     public ReservationBean printBookingDetails(String reservationID) {
         return viewBookingDetails(reservationID); // Return the booking details for printing
     }
+  //Update Credentials with Profile updation:
+    public ProfileBean registerProfile(String userID, String firstName, String lastName, String dateOfBirth, String gender, String  street,String location,String city,String state,String pincode,String mobile) {
+		ProfileBean profileBean = new ProfileBean(userID, firstName, lastName, dateOfBirth, gender, street, location, city, state, pincode, mobile, mobile, mobile);
+    	profileList.add(profileBean);
+    	return profileBean;
+	}
 }

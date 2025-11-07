@@ -1,6 +1,11 @@
 package com.ust.bean;
 
 public class RouteBean {
+	@Override
+	public String toString() {
+		return "routeID=" + routeID + ", source=" + source + ", destination=" + destination + ", distance="
+				+ distance + ", travelDuration=" + travelDuration;
+	}
 	private String routeID;
     private String source;
     private String destination;

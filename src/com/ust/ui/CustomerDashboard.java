@@ -24,7 +24,6 @@ public class CustomerDashboard extends JFrame {
         setSize(1200, 800);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
-
         add(topBar(), BorderLayout.NORTH);
         add(sidebar(), BorderLayout.WEST);
         add(cards(), BorderLayout.CENTER);

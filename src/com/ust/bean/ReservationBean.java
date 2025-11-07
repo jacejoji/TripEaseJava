@@ -1,6 +1,13 @@
 package com.ust.bean;
 
 public class ReservationBean {
+	@Override
+	public String toString() {
+		return "reservationID=" + reservationID + ", userID=" + userID + ", routeID=" + routeID
+				+ ", bookingDate=" + bookingDate + ", journeyDate=" + journeyDate + ", vehicleID=" + vehicleID
+				+ ", driverID=" + driverID + ", bookingStatus=" + bookingStatus + ", totalFare=" + totalFare
+				+ ", boardingPoint=" + boardingPoint + ", dropPoint=" + dropPoint;
+	}
 	private String reservationID;
     private String userID;
     private String routeID;

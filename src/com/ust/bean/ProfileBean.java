@@ -3,7 +3,7 @@ package com.ust.bean;
 public class ProfileBean {
 	@Override
 	public String toString() {
-		return "Profile userID=" + userID + "\n firstName=" + firstName + "\n lastName=" + lastName
+		return "userID=" + userID + "\n firstName=" + firstName + "\n lastName=" + lastName
 				+ "\n dateOfBirth=" + dateOfBirth + "\n gender=" + gender + "\n street=" + street + "\n location="
 				+ location + "\n city=" + city + "\n state=" + state + "\n pincode=" + pincode + "\n mobileNo=" + mobileNo
 				+ "\n emailID=" + emailID ;
@@ -97,6 +97,27 @@ public class ProfileBean {
 		return password;
 	}
 	public void setPassword(String password) {
+		this.password = password;
+	}
+	public ProfileBean() {
+		super();
+	}
+	public ProfileBean(String userID, String firstName, String lastName, String dateOfBirth, String gender,
+			String street, String location, String city, String state, String pincode, String mobileNo, String emailID,
+			String password) {
+		super();
+		this.userID = userID;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.dateOfBirth = dateOfBirth;
+		this.gender = gender;
+		this.street = street;
+		this.location = location;
+		this.city = city;
+		this.state = state;
+		this.pincode = pincode;
+		this.mobileNo = mobileNo;
+		this.emailID = emailID;
 		this.password = password;
 	}
 

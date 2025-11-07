@@ -1,6 +1,12 @@
 package com.ust.bean;
 
 public class DriverBean {
+	 @Override
+	public String toString() {
+		return "driverID=" + driverID + ", name=" + name + ", street=" + street + ", location=" + location
+				+ ", city=" + city + ", state=" + state + ", pincode=" + pincode + ", mobileNo=" + mobileNo
+				+ ", licenseNumber=" + licenseNumber;
+	}
 	 private String driverID;
 	    private String name;
 	    private String street;
@@ -64,5 +70,6 @@ public class DriverBean {
 		}
 		private String mobileNo;
 	    private String licenseNumber;
+	    
 
 }

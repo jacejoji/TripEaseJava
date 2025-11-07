@@ -66,6 +66,7 @@ public class Data {
         vehicle1.setVehicleID("VH001");
         vehicle1.setName("Toyota Corolla");
         vehicle1.setType("Sedan");
+        vehicle1.setRegistrationNumber("ABC123");
         vehicle1.setSeatingCapacity(4);
         vehicle1.setFarePerKM(10.5);
         vehicleList.add(vehicle1);
@@ -74,6 +75,7 @@ public class Data {
         vehicle2.setVehicleID("VH002");
         vehicle2.setName("Honda CR-V");
         vehicle2.setType("SUV");
+		vehicle2.setRegistrationNumber("XYZ789");
         vehicle2.setSeatingCapacity(6);
         vehicle2.setFarePerKM(12.5);
         vehicleList.add(vehicle2);
@@ -82,6 +84,7 @@ public class Data {
         vehicle3.setVehicleID("VH003");
         vehicle3.setName("Mercedes-Benz S-Class");
         vehicle3.setType("Luxury");
+		vehicle3.setRegistrationNumber("DEF456");
         vehicle3.setSeatingCapacity(4);
         vehicle3.setFarePerKM(25.0);
         vehicleList.add(vehicle3);
@@ -90,6 +93,7 @@ public class Data {
         vehicle4.setVehicleID("VH004");
         vehicle4.setName("Tesla Model X");
         vehicle4.setType("Electric SUV");
+		vehicle4.setRegistrationNumber("GHI789");
         vehicle4.setSeatingCapacity(7);
         vehicle4.setFarePerKM(15.0);
         vehicleList.add(vehicle4);
@@ -98,6 +102,7 @@ public class Data {
         vehicle5.setVehicleID("VH005");
         vehicle5.setName("Ford Mustang");
         vehicle5.setType("Sports Car");
+		vehicle5.setRegistrationNumber("JKL012");
         vehicle5.setSeatingCapacity(2);
         vehicle5.setFarePerKM(20.0);
         vehicleList.add(vehicle5);

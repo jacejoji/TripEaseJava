@@ -47,7 +47,7 @@ public class AdministratorDAO  implements Administrator{
 	    public boolean modifyVehicle(VehicleBean vehicleBean) {
 	        for (int i = 0; i < vehicleList.size(); i++) {
 	            if (vehicleList.get(i).getVehicleID().equals(vehicleBean.getVehicleID())) {
-	                vehicleList.set(i, vehicleBean);  // Replace old vehicle with modified one
+	                vehicleList.set(i, vehicleBean); // Replace old vehicle with modified one
 	                return true;
 	            }
 	        }

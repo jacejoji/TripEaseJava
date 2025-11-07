@@ -9,37 +9,46 @@ import com.ust.dao.*;
 public class LauncherCLI {
 
 	public static void main(String[] args) {
-
 		Scanner scanner = new Scanner(System.in);
 		TripEaseDAO tripEaseDAO = new TripEaseDAO();
 		AdministratorDAO adminDAO = new AdministratorDAO();
 		CustomerDAO customerDAO = new CustomerDAO();
-
-		System.out.println("!!! Welcome to TripEase CLI !!!");
-		System.out.println("Automation of Travel Agency (ATA)");
-		System.out.println("====================================");
+		CredentialsBean user ;
 
 		// ------------------ LOGIN -------------------
+		int loginAttempts = 0;
+		while(loginAttempts < 3){
+			System.out.println("!!! Welcome to TripEase CLI !!!");
+			System.out.println("Automation of Travel Agency (ATA)");
+			System.out.println("====================================");
+		do {
 		System.out.print("Enter UserID: ");
 		String userID = scanner.nextLine();
 
 		System.out.print("Enter Password: ");
 		String password = scanner.nextLine();
 
-		CredentialsBean user = tripEaseDAO.login(userID, password);
+		user = tripEaseDAO.login(userID, password);
 		if (user == null) {
-			System.out.println("Invalid credentials. Exiting...");
-			return;
+			System.out.println("Invalid credentials.");
+			System.out.println("Please try again."+(3-loginAttempts)+" attempts remaining.");
+			loginAttempts++;
 		}
+		else {
+			break;
+		}
+		}while(loginAttempts < 3);
 
 		System.out.println("Login Successful!");
-		System.out.println("Logged in as: " + (user.getUserType().equalsIgnoreCase("A") ? "Administrator" : "Customer"));
+		System.out.println("Logged in as: " + (user.getUserType().equalsIgnoreCase("Administrator") ? "Administrator" : "Customer"));
 
 		// ------------------ ROLE BASED MENU -------------------
 		if (user.getUserType().equalsIgnoreCase("Administrator")) {
-			adminMenu(scanner, adminDAO, customerDAO);
+			adminMenu(scanner, adminDAO, customerDAO,user);
 		} else {
-			customerMenu(scanner, customerDAO);
+			customerMenu(scanner, customerDAO,user);
+		}
+		loginAttempts = 0;
 		}
 
 		scanner.close();
@@ -48,9 +57,9 @@ public class LauncherCLI {
 	// ==========================================================
 	// ADMINISTRATOR MENU  (AD-001 → AD-013)
 	// ==========================================================
-	private static void adminMenu(Scanner scanner, AdministratorDAO adminDAO, CustomerDAO customerDAO) {
+	private static void adminMenu(Scanner scanner, AdministratorDAO adminDAO, CustomerDAO customerDAO,CredentialsBean user) {
 		while (true) {
-			System.out.println("\n====== ADMIN REQUIREMENTS (ATRS_ATA) ======");
+			System.out.println("\n====== ADMIN REQUIREMENTS ======");
 			System.out.println("AD-001 : Add Vehicle");
 			System.out.println("AD-002 : Delete Vehicle");
 			System.out.println("AD-003 : View Vehicle");
@@ -65,6 +74,7 @@ public class LauncherCLI {
 			System.out.println("AD-012 : Allot Driver");
 			System.out.println("AD-013 : View Booking Details (Date + Route)");
 			System.out.println("0 : Logout");
+			System.out.println("\n============================");
 			System.out.print("Enter Requirement ID or 0 to exit: ");
 
 			String req = scanner.nextLine().trim();
@@ -75,12 +85,18 @@ public class LauncherCLI {
 				case "AD-001":
 					System.out.println("[AD-001] Adding Vehicle");
 					VehicleBean v = new VehicleBean();
-					System.out.print("VehicleID: "); v.setVehicleID(scanner.nextLine());
-					System.out.print("Name: "); v.setName(scanner.nextLine());
-					System.out.print("Type: "); v.setType(scanner.nextLine());
-					System.out.print("Registration Number: "); v.setRegistrationNumber(scanner.nextLine());
-					System.out.print("Seating Capacity: "); v.setSeatingCapacity(Integer.parseInt(scanner.nextLine()));
-					System.out.print("Fare Per KM: "); v.setFarePerKM(Double.parseDouble(scanner.nextLine()));
+					System.out.print("VehicleID: "); 
+					v.setVehicleID(scanner.nextLine());
+					System.out.print("Name: "); 
+					v.setName(scanner.nextLine());
+					System.out.print("Type: "); 
+					v.setType(scanner.nextLine());
+					System.out.print("Registration Number: ");
+					 v.setRegistrationNumber(scanner.nextLine());
+					System.out.print("Seating Capacity: "); 
+					v.setSeatingCapacity(Integer.parseInt(scanner.nextLine()));
+					System.out.print("Fare Per KM: "); 
+					v.setFarePerKM(Double.parseDouble(scanner.nextLine()));
 					System.out.println(adminDAO.addVehicle(v));
 					break;
 
@@ -101,12 +117,18 @@ public class LauncherCLI {
 				case "AD-004":
 					System.out.println("[AD-004] Modify Vehicle");
 					VehicleBean mv = new VehicleBean();
-					System.out.print("VehicleID: "); mv.setVehicleID(scanner.nextLine());
-					System.out.print("Name: "); mv.setName(scanner.nextLine());
-					System.out.print("Type: "); mv.setType(scanner.nextLine());
-					System.out.print("Registration No: "); mv.setRegistrationNumber(scanner.nextLine());
-					System.out.print("Seats: "); mv.setSeatingCapacity(Integer.parseInt(scanner.nextLine()));
-					System.out.print("Fare/KM: "); mv.setFarePerKM(Double.parseDouble(scanner.nextLine()));
+					System.out.print("VehicleID: "); 
+					mv.setVehicleID(scanner.nextLine());
+					System.out.print("Name: "); 
+					mv.setName(scanner.nextLine());
+					System.out.print("Type: "); 
+					mv.setType(scanner.nextLine());
+					System.out.print("Registration No: "); 
+					mv.setRegistrationNumber(scanner.nextLine());
+					System.out.print("Seats: "); 
+					mv.setSeatingCapacity(Integer.parseInt(scanner.nextLine()));
+					System.out.print("Fare/KM: "); 
+					mv.setFarePerKM(Double.parseDouble(scanner.nextLine()));
 					System.out.println("Updated: " + adminDAO.modifyVehicle(mv));
 					break;
 
@@ -114,11 +136,16 @@ public class LauncherCLI {
 				case "AD-005":
 					System.out.println("[AD-005] Add Route");
 					RouteBean r = new RouteBean();
-					System.out.print("RouteID: "); r.setRouteID(scanner.nextLine());
-					System.out.print("Source: "); r.setSource(scanner.nextLine());
-					System.out.print("Destination: "); r.setDestination(scanner.nextLine());
-					System.out.print("Distance: "); r.setDistance(Integer.parseInt(scanner.nextLine()));
-					System.out.print("Travel Duration: "); r.setTravelDuration(Integer.parseInt(scanner.nextLine()));
+					System.out.print("RouteID: "); 
+					r.setRouteID(scanner.nextLine()); 
+					System.out.print("Source: "); 
+					r.setSource(scanner.nextLine());
+					System.out.print("Destination: "); 
+					r.setDestination(scanner.nextLine());
+					System.out.print("Distance: "); 
+					r.setDistance(Integer.parseInt(scanner.nextLine()));
+					System.out.print("Travel Duration: ");
+					 r.setTravelDuration(Integer.parseInt(scanner.nextLine()));
 					System.out.println(adminDAO.addRoute(r));
 					break;
 
@@ -138,11 +165,16 @@ public class LauncherCLI {
 				case "AD-008":
 					System.out.println("[AD-008] Modify Route");
 					RouteBean mr = new RouteBean();
-					System.out.print("RouteID: "); mr.setRouteID(scanner.nextLine());
-					System.out.print("Source: "); mr.setSource(scanner.nextLine());
-					System.out.print("Destination: "); mr.setDestination(scanner.nextLine());
-					System.out.print("Distance: "); mr.setDistance(Integer.parseInt(scanner.nextLine()));
-					System.out.print("Duration: "); mr.setTravelDuration(Integer.parseInt(scanner.nextLine()));
+					System.out.print("RouteID: "); 
+					mr.setRouteID(scanner.nextLine());
+					System.out.print("Source: "); 
+					mr.setSource(scanner.nextLine());
+					System.out.print("Destination: ");
+					 mr.setDestination(scanner.nextLine());
+					System.out.print("Distance: "); 
+					mr.setDistance(Integer.parseInt(scanner.nextLine()));
+					System.out.print("Duration: "); 
+					mr.setTravelDuration(Integer.parseInt(scanner.nextLine()));
 					System.out.println("Updated: " + adminDAO.modifyRoute(mr));
 					break;
 
@@ -150,15 +182,24 @@ public class LauncherCLI {
 				case "AD-009":
 					System.out.println("[AD-009] Add Driver");
 					DriverBean d = new DriverBean();
-					System.out.print("DriverID: "); d.setDriverID(scanner.nextLine());
-					System.out.print("Name: "); d.setName(scanner.nextLine());
-					System.out.print("Street: "); d.setStreet(scanner.nextLine());
-					System.out.print("Location: "); d.setLocation(scanner.nextLine());
-					System.out.print("City: "); d.setCity(scanner.nextLine());
-					System.out.print("State: "); d.setState(scanner.nextLine());
-					System.out.print("Pincode: "); d.setPincode(scanner.nextLine());
-					System.out.print("Mobile: "); d.setMobileNo(scanner.nextLine());
-					System.out.print("License No: "); d.setLicenseNumber(scanner.nextLine());
+					System.out.print("DriverID: "); 
+					d.setDriverID(scanner.nextLine());
+					System.out.print("Name: "); 
+					d.setName(scanner.nextLine());
+					System.out.print("Street: "); 
+					d.setStreet(scanner.nextLine());
+					System.out.print("Location: "); 
+					d.setLocation(scanner.nextLine());
+					System.out.print("City: "); 
+					d.setCity(scanner.nextLine());
+					System.out.print("State: "); 
+					d.setState(scanner.nextLine());
+					System.out.print("Pincode: "); 
+					d.setPincode(scanner.nextLine());
+					System.out.print("Mobile: "); 
+					d.setMobileNo(scanner.nextLine());
+					System.out.print("License No: "); 
+					d.setLicenseNumber(scanner.nextLine());
 					System.out.println(adminDAO.addDriver(d));
 					break;
 
@@ -172,10 +213,14 @@ public class LauncherCLI {
 				case "AD-011":
 					System.out.println("[AD-011] Modify Driver");
 					DriverBean md = new DriverBean();
-					System.out.print("DriverID: "); md.setDriverID(scanner.nextLine());
-					System.out.print("Name: "); md.setName(scanner.nextLine());
-					System.out.print("Mobile: "); md.setMobileNo(scanner.nextLine());
-					System.out.print("License: "); md.setLicenseNumber(scanner.nextLine());
+					System.out.print("DriverID: "); 
+					md.setDriverID(scanner.nextLine());
+					System.out.print("Name: "); 
+					md.setName(scanner.nextLine());
+					System.out.print("Mobile: "); 
+					md.setMobileNo(scanner.nextLine());
+					System.out.print("License: "); 
+					md.setLicenseNumber(scanner.nextLine());
 					System.out.println("Updated: " + adminDAO.modifyDriver(md));
 					break;
 
@@ -216,7 +261,7 @@ public class LauncherCLI {
 	// ==========================================================
 	// CUSTOMER MENU  (US-001 → US-005)
 	// ==========================================================
-	private static void customerMenu(Scanner scanner, CustomerDAO customerDAO) {
+	private static void customerMenu(Scanner scanner, CustomerDAO customerDAO,CredentialsBean user) {
 
 		while (true) {
 			System.out.println("\n====== CUSTOMER REQUIREMENTS ======");
@@ -226,14 +271,31 @@ public class LauncherCLI {
 			System.out.println("US-004 : Cancel Booking");
 			System.out.println("US-005 : View / Print Ticket");
 			System.out.println("0 : Logout");
+			System.out.println("\n============================");
 			System.out.print("Enter Requirement ID: ");
-
 			String req = scanner.nextLine().trim();
 
 			switch (req.toUpperCase()) {
 
 				case "US-001":
-					System.out.println("[US-001] Registration supported in GUI; CLI optional.");
+					System.out.println("[US-001] Register Profile");
+					System.out.print("Name: ");
+					String name = scanner.nextLine();
+					System.out.print("Street: ");
+					String street = scanner.nextLine();
+					System.out.print("Location: ");
+					String location = scanner.nextLine();
+					System.out.print("City: ");
+					String city = scanner.nextLine();
+					System.out.print("State: ");
+					String state = scanner.nextLine();
+					System.out.print("Pincode: ");
+					String pincode = scanner.nextLine();
+					System.out.print("Mobile: ");
+					String mobile = scanner.nextLine();
+					System.out.println("Password: ");
+					String password = scanner.nextLine();
+					System.out.println("Registered: " + customerDAO.registerProfile(user.getUserID(), name, street, location, city, state, pincode, mobile,password, name, name));
 					break;
 
 				case "US-002":
@@ -244,21 +306,27 @@ public class LauncherCLI {
 
 				case "US-003":
 					ReservationBean rb = new ReservationBean();
-					System.out.print("ReservationID: "); rb.setReservationID(scanner.nextLine());
-					System.out.print("UserID: "); rb.setUserID(scanner.nextLine());
-					System.out.print("RouteID: "); rb.setRouteID(scanner.nextLine());
-					System.out.print("VehicleID: "); rb.setVehicleID(scanner.nextLine());
-					System.out.print("BookingDate: "); rb.setBookingDate(scanner.nextLine());
-					System.out.print("JourneyDate: "); rb.setJourneyDate(scanner.nextLine());
-					System.out.print("Boarding Point: "); rb.setBoardingPoint(scanner.nextLine());
-					System.out.print("Drop Point: "); rb.setDropPoint(scanner.nextLine());
+					System.out.print("ReservationID: "); 
+					rb.setReservationID(scanner.nextLine());
+					 rb.setUserID(user.getUserID());
+					System.out.print("RouteID: "); 
+					rb.setRouteID(scanner.nextLine());
+					System.out.print("VehicleID: "); 
+					rb.setVehicleID(scanner.nextLine());
+					System.out.print("BookingDate: "); 
+					rb.setBookingDate(scanner.nextLine());
+					System.out.print("JourneyDate: "); 
+					rb.setJourneyDate(scanner.nextLine());
+					System.out.print("Boarding Point: "); 
+					rb.setBoardingPoint(scanner.nextLine());
+					System.out.print("Drop Point: "); 
+					rb.setDropPoint(scanner.nextLine());
 					rb.setBookingStatus("CONFIRMED");
 					System.out.println("Booking ID: " + customerDAO.bookVehicle(rb));
 					break;
 
 				case "US-004":
-					System.out.print("Enter UserID: ");
-					String uid = scanner.nextLine();
+					String uid = user.getUserID();
 					System.out.print("ReservationID: ");
 					String rid = scanner.nextLine();
 					System.out.println("Cancelled: " + customerDAO.cancelBooking(uid, rid));

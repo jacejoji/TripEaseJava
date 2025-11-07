@@ -1,6 +1,11 @@
 package com.ust.bean;
 
 public class VehicleBean {
+	@Override
+	public String toString() {
+		return "vehicleID=" + vehicleID + ", name=" + name + ", type=" + type + ", registrationNumber="
+				+ registrationNumber + ", seatingCapacity=" + seatingCapacity + ", farePerKM=" + farePerKM;
+	}
 	private String vehicleID;
     private String name;
     private String type;
