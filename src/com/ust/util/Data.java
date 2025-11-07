@@ -107,6 +107,15 @@ public class Data {
         vehicle5.setFarePerKM(20.0);
         vehicleList.add(vehicle5);
 
+        VehicleBean vehicle6 = new VehicleBean();
+        vehicle6.setVehicleID("VH006");
+        vehicle6.setName("Honda SUV");
+        vehicle6.setType("SUV");
+        vehicle6.setRegistrationNumber("ABZ789");
+        vehicle6.setSeatingCapacity(5);
+        vehicle6.setFarePerKM(16.5);
+        vehicleList.add(vehicle6);
+
         return vehicleList;
     }
 

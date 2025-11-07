@@ -15,6 +15,15 @@ public class Launcher {
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> new Launcher().show());
+        UIManager.put("Button.focus", UIManager.getColor("Button.background"));
+        UIManager.put("Button.font", new Font("SansSerif", Font.PLAIN, 14));
+        UIManager.put("Label.font", new Font("SansSerif", Font.PLAIN, 14));
+        UIManager.put("TextField.font", new Font("SansSerif", Font.PLAIN, 14));
+        UIManager.put("TextArea.font", new Font("Monospaced", Font.PLAIN, 13));
+        UIManager.put("Table.font", new Font("SansSerif", Font.PLAIN, 14));
+        UIManager.put("Table.rowHeight", 26);
+        UIManager.put("TableHeader.font", new Font("SansSerif", Font.BOLD, 14));
+
     }
 
     public void show() {
@@ -83,17 +92,65 @@ public class Launcher {
         });
 
         changePwdBtn.addActionListener(e -> {
-            outputArea.setText("Change password will use TripEaseDAO.changePassword(..). Implement in DAO and wire here.");
-            // Example once added:
-            // var cred = new CredentialsBean(); cred.setUserID(userIDField.getText()); cred.setPassword(currentPwd);
-            // String result = tripEaseDAO.changePassword(cred, newPwd);
+            String uid = userIDField.getText().trim();
+            String oldPwd = new String(passwordField.getPassword()).trim();
+
+            if (uid.isEmpty() || oldPwd.isEmpty()) {
+                outputArea.setText("Enter UserID and current password first.");
+                return;
+            }
+
+            // Ask for new password using an input field dialog
+            String newPwd = JOptionPane.showInputDialog(frame, "Enter new password:");
+
+            if (newPwd == null || newPwd.trim().isEmpty()) {
+                outputArea.setText("Password change cancelled.");
+                return;
+            }
+
+            CredentialsBean cred = new CredentialsBean();
+            cred.setUserID(uid);
+            cred.setPassword(oldPwd);
+
+            String result = tripEaseDAO.changePassword(cred, newPwd.trim());
+
+            switch (result) {
+                case "SUCCESS":
+                    outputArea.setText("Password changed successfully.");
+                    break;
+
+                case "INVALID":
+                    outputArea.setText("Invalid current password. Please try again.");
+                    break;
+
+                case "FAIL":
+                default:
+                    outputArea.setText("Failed to change password.");
+                    break;
+            }
         });
 
+
         logoutBtn.addActionListener(e -> {
-            outputArea.setText("Logout will use TripEaseDAO.logout(..). Implement in DAO and wire here.");
-            // Example once added:
-            // boolean ok = tripEaseDAO.logout(currentUserId);
+
+            String uid = userIDField.getText().trim();
+
+            if (uid.isEmpty()) {
+                outputArea.setText("Enter UserID first.");
+                return;
+            }
+
+            boolean ok = tripEaseDAO.logout(uid);
+
+            if (ok) {
+                outputArea.setText("Logout successful.");
+                userIDField.setText("");
+                passwordField.setText("");
+            } else {
+                outputArea.setText("Logout failed. UserID not found or already logged out.");
+            }
         });
+
 
         frame.setVisible(true);
     }

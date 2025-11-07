@@ -25,7 +25,10 @@ public class CustomerDashboard extends JFrame {
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
         add(topBar(), BorderLayout.NORTH);
-        add(sidebar(), BorderLayout.WEST);
+        JPanel left = new JPanel(new BorderLayout());
+        left.add(reqDropdown(), BorderLayout.NORTH);
+        left.add(sidebar(), BorderLayout.CENTER);
+        add(left, BorderLayout.WEST);
         add(cards(), BorderLayout.CENTER);
         add(statusBar(), BorderLayout.SOUTH);
     }
@@ -34,10 +37,22 @@ public class CustomerDashboard extends JFrame {
         JPanel p = new JPanel(new BorderLayout());
         JLabel title = new JLabel("Customer Console", SwingConstants.CENTER);
         title.setFont(new Font("SansSerif", Font.BOLD, 20));
+
+        JButton logoutBtn = new JButton("Logout");
+        logoutBtn.addActionListener(e -> {
+            dispose();
+            SwingUtilities.invokeLater(() -> new Launcher().show());
+        });
+
+        JPanel right = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        right.add(new JLabel("Logged in: " + currentUserId + "  "));
+        right.add(logoutBtn);
+
         p.add(title, BorderLayout.CENTER);
-        p.add(new JLabel(" Logged in: " + currentUserId + "  "), BorderLayout.EAST);
+        p.add(right, BorderLayout.EAST);
         return p;
     }
+
 
     private JComponent sidebar() {
         JPanel bar = new JPanel(new GridLayout(0,1,6,6));
@@ -59,9 +74,13 @@ public class CustomerDashboard extends JFrame {
 
     private JButton button(String text, Runnable onClick) {
         JButton b = new JButton(text);
+        b.setPreferredSize(new Dimension(180, 35));
+        b.setMaximumSize(new Dimension(180, 35));
+        b.setFont(new Font("SansSerif", Font.PLAIN, 14));
         b.addActionListener(e -> onClick.run());
         return b;
     }
+
 
     private JComponent statusBar() {
         status.setEditable(false);
@@ -250,4 +269,40 @@ public class CustomerDashboard extends JFrame {
         JPanel f = FormUtils.form("Reservation ID", reservationId);
         return FormUtils.section("Print Booking", f, print, new JScrollPane(out));
     }
+    private JComponent reqDropdown() {
+
+        String[] ids = {
+                "US-001  Register Profile",
+                "US-002  View Vehicles by Type",
+                "US-003  Book Vehicle",
+                "US-004  Cancel Booking",
+                "US-005  View/Print Booking"
+        };
+
+        JComboBox<String> combo = new JComboBox<>(ids);
+        combo.setSelectedIndex(-1);
+
+        combo.addActionListener(e -> {
+            String s = (String) combo.getSelectedItem();
+            if (s == null) return;
+
+            String id = s.substring(0, 6);
+
+            switch (id) {
+                case "US-001": cardLayout.show(cardHost, "register"); break;
+                case "US-002": cardLayout.show(cardHost, "vehType"); break;
+                case "US-003": cardLayout.show(cardHost, "book"); break;
+                case "US-004": cardLayout.show(cardHost, "cancel"); break;
+                case "US-005": cardLayout.show(cardHost, "printBook"); break;
+            }
+        });
+
+        JPanel p = new JPanel(new BorderLayout());
+        p.add(new JLabel("Requirement ID Jump"), BorderLayout.NORTH);
+        p.add(combo, BorderLayout.CENTER);
+        p.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
+
+        return p;
+    }
+
 }

@@ -72,4 +72,22 @@ public final class FormUtils {
         }
         return list;
     }
+    public static boolean require(JTextField field, String fieldName, JTextArea status) {
+        if (field.getText().trim().isEmpty()) {
+            status.setText("ERROR: " + fieldName + " cannot be empty.");
+            field.requestFocus();
+            return false;
+        }
+        return true;
+    }
+
+    public static boolean requirePassword(JPasswordField field, String fieldName, JTextArea status) {
+        if (new String(field.getPassword()).trim().isEmpty()) {
+            status.setText("ERROR: " + fieldName + " cannot be empty.");
+            field.requestFocus();
+            return false;
+        }
+        return true;
+    }
+
 }

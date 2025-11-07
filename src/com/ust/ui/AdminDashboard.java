@@ -29,19 +29,37 @@ public class AdminDashboard extends JFrame {
         setLayout(new BorderLayout());
 
         add(topBar(), BorderLayout.NORTH);
-        add(sidebar(), BorderLayout.WEST);
         add(cards(), BorderLayout.CENTER);
         add(statusBar(), BorderLayout.SOUTH);
+        add(requirementDropdown(), BorderLayout.WEST);
+        JPanel left = new JPanel(new BorderLayout());
+        left.add(requirementDropdown(), BorderLayout.NORTH);
+        left.add(sidebar(), BorderLayout.CENTER);
+        add(left, BorderLayout.WEST);
+
+
     }
 
     private JComponent topBar() {
         JPanel p = new JPanel(new BorderLayout());
         JLabel title = new JLabel("Administrator Console", SwingConstants.CENTER);
         title.setFont(new Font("SansSerif", Font.BOLD, 20));
+
+        JButton logoutBtn = new JButton("Logout");
+        logoutBtn.addActionListener(e -> {
+            dispose();
+            SwingUtilities.invokeLater(() -> new Launcher().show());
+        });
+
+        JPanel right = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        right.add(new JLabel("Logged in: " + currentUserId + "  "));
+        right.add(logoutBtn);
+
         p.add(title, BorderLayout.CENTER);
-        p.add(new JLabel(" Logged in: " + currentUserId + "  "), BorderLayout.EAST);
+        p.add(right, BorderLayout.EAST);
         return p;
     }
+
 
     private JComponent sidebar() {
         JPanel bar = new JPanel();
@@ -83,9 +101,13 @@ public class AdminDashboard extends JFrame {
 
     private JButton button(String text, Runnable onClick) {
         JButton b = new JButton(text);
+        b.setPreferredSize(new Dimension(180, 35));
+        b.setMaximumSize(new Dimension(180, 35));
+        b.setFont(new Font("SansSerif", Font.PLAIN, 14));
         b.addActionListener(e -> onClick.run());
         return b;
     }
+
 
     private JComponent statusBar() {
         status.setEditable(false);
@@ -474,4 +496,58 @@ public class AdminDashboard extends JFrame {
         p.add(new JScrollPane(table), BorderLayout.CENTER);
         return p;
     }
+    private JComponent requirementDropdown() {
+
+        String[] ids = {
+                "AD-001  Add Vehicle",
+                "AD-002  Delete Vehicle",
+                "AD-003  View Vehicle",
+                "AD-004  Modify Vehicle",
+                "AD-005  Add Route",
+                "AD-006  Delete Route",
+                "AD-007  View Route",
+                "AD-008  Modify Route",
+                "AD-009  Add Driver",
+                "AD-010  Delete Driver",
+                "AD-011  Modify Driver",
+                "AD-012  Allot Driver to Reservation",
+                "AD-013  View Bookings (Date+Route)"
+        };
+
+        JComboBox<String> combo = new JComboBox<>(ids);
+        combo.setSelectedIndex(-1);
+
+        combo.addActionListener(e -> {
+            String s = (String) combo.getSelectedItem();
+            if (s == null) return;
+            String id = s.substring(0, 6);
+
+            switch (id) {
+                case "AD-001": cardLayout.show(cardHost, "vehAdd"); break;
+                case "AD-002": cardLayout.show(cardHost, "vehDel"); break;
+                case "AD-003": cardLayout.show(cardHost, "vehById"); break;
+                case "AD-004": cardLayout.show(cardHost, "vehMod"); break;
+
+                case "AD-005": cardLayout.show(cardHost, "routeAdd"); break;
+                case "AD-006": cardLayout.show(cardHost, "routeDel"); break;
+                case "AD-007": cardLayout.show(cardHost, "routeById"); break;
+                case "AD-008": cardLayout.show(cardHost, "routeMod"); break;
+
+                case "AD-009": cardLayout.show(cardHost, "driverAdd"); break;
+                case "AD-010": cardLayout.show(cardHost, "driverDel"); break;
+                case "AD-011": cardLayout.show(cardHost, "driverMod"); break;
+
+                case "AD-012": cardLayout.show(cardHost, "allot"); break;
+                case "AD-013": cardLayout.show(cardHost, "bookings"); break;
+            }
+        });
+
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.add(new JLabel("Requirement ID Jump"), BorderLayout.NORTH);
+        panel.add(combo, BorderLayout.CENTER);
+        panel.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
+
+        return panel;
+    }
+
 }

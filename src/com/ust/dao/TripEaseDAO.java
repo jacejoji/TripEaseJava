@@ -47,4 +47,46 @@ public class TripEaseDAO {
 		}
 		return null;
 	}
+	public String register(ProfileBean profile) {
+		String generatedID = profile.getFirstName().substring(0, 2).toUpperCase() +
+				String.format("%04d", userList.size() + 1);
+
+		profile.setUserID(generatedID);
+
+		profileList.add(profile);
+
+		CredentialsBean cred = new CredentialsBean();
+		cred.setUserID(generatedID);
+		cred.setPassword(profile.getPassword());
+		cred.setUserType("C");
+		cred.setLoginStatus(0);
+
+		userList.add(cred);
+
+		return generatedID;
+	}
+	public String changePassword(CredentialsBean credentials, String newPassword) {
+		for (CredentialsBean user : userList) {
+			if (user.getUserID().equals(credentials.getUserID())) {
+				if (!user.getPassword().equals(credentials.getPassword())) {
+					return "INVALID";
+				}
+				user.setPassword(newPassword);
+				return "SUCCESS";
+			}
+		}
+		return "FAIL";
+	}
+	public boolean logout(String userID) {
+		for (CredentialsBean user : userList) {
+			if (user.getUserID().equals(userID)) {
+				user.setLoginStatus(0);
+				return true;
+			}
+		}
+		return false;
+	}
+
+
+
 }
