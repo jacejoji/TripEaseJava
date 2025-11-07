@@ -29,17 +29,28 @@ public final class FormUtils {
         return p;
     }
 
-    public static JPanel section(String title, JComponent... children) {
-        JPanel p = new JPanel(new BorderLayout(10,10));
-        JLabel t = new JLabel("  " + title);
-        t.setFont(new Font("SansSerif", Font.BOLD, 16));
-        JPanel body = new JPanel();
-        body.setLayout(new BoxLayout(body, BoxLayout.Y_AXIS));
-        for (JComponent c : children) body.add(wrap(c));
-        p.add(t, BorderLayout.NORTH);
-        p.add(body, BorderLayout.CENTER);
-        return p;
+    public static JComponent section(String title, JComponent... parts) {
+        JPanel outer = new JPanel();
+        outer.setLayout(new BoxLayout(outer, BoxLayout.Y_AXIS));
+        outer.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        JLabel t = new JLabel(title);
+        t.setFont(new Font("SansSerif", Font.BOLD, 18));
+        t.setAlignmentX(Component.LEFT_ALIGNMENT);
+        outer.add(t);
+        outer.add(Box.createVerticalStrut(10));
+
+        for (JComponent c : parts) {
+            c.setAlignmentX(Component.LEFT_ALIGNMENT);
+            outer.add(c);
+            outer.add(Box.createVerticalStrut(10));
+        }
+
+        JPanel wrapper = new JPanel(new BorderLayout());
+        wrapper.add(outer, BorderLayout.NORTH); // ✅ prevents stretching
+        return new JScrollPane(wrapper);        // ✅ scrollable & compact
     }
+
 
     public static JPanel row(JComponent... children) {
         JPanel p = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 0));

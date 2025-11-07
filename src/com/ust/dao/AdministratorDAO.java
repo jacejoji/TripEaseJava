@@ -150,6 +150,13 @@ public class AdministratorDAO  implements Administrator{
 	        }
 	        return result;
 	    }
+	public DriverBean viewDriver(String driverID) {
+		for (DriverBean d : driverList) {
+			if (d.getDriverID().equalsIgnoreCase(driverID))
+				return d;
+		}
+		return null;
+	}
 	    public ArrayList<ReservationBean> getAllBookings() {
 	        return new ArrayList<>(reservationList);
 	    }

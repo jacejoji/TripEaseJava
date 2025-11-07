@@ -1,7 +1,5 @@
 package com.ust.dao;
-
 import java.util.ArrayList;
-
 import com.ust.bean.CredentialsBean;
 import com.ust.bean.DriverBean;
 import com.ust.bean.ProfileBean;
@@ -69,10 +67,52 @@ public class CustomerDAO  implements Customer{
     public ReservationBean printBookingDetails(String reservationID) {
         return viewBookingDetails(reservationID); // Return the booking details for printing
     }
-  //Update Credentials with Profile updation:
-    public ProfileBean registerProfile(String userID, String firstName, String lastName, String dateOfBirth, String gender, String  street,String location,String city,String state,String pincode,String mobile) {
-		ProfileBean profileBean = new ProfileBean(userID, firstName, lastName, dateOfBirth, gender, street, location, city, state, pincode, mobile, mobile, mobile);
-    	profileList.add(profileBean);
-    	return profileBean;
-	}
+
+  public ProfileBean registerProfile(
+          String userID,
+          String firstName,
+          String lastName,
+          String dateOfBirth,
+          String gender,
+          String street,
+          String location,
+          String city,
+          String state,
+          String pincode,
+          String mobileNo,
+          String emailID,
+          String password
+  ) {
+      // Create Profile
+      ProfileBean profileBean = new ProfileBean(
+              userID,
+              firstName,
+              lastName,
+              dateOfBirth,
+              gender,
+              street,
+              location,
+              city,
+              state,
+              pincode,
+              mobileNo,
+              emailID,
+              password
+      );
+
+      // Save profile in memory
+      profileList.add(profileBean);
+
+      // ALSO create credentials (so the user can log in)
+      CredentialsBean cred = new CredentialsBean();
+      cred.setUserID(userID);
+      cred.setPassword(password);
+      cred.setUserType("Customer");
+      cred.setLoginStatus(0);
+
+      userList.add(cred);
+
+      return profileBean;
+  }
+
 }

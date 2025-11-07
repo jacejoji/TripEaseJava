@@ -160,6 +160,7 @@ public class CustomerDashboard extends JFrame {
 
         JButton search = new JButton("Search");
         search.addActionListener(e -> {
+            if (!FormUtils.require(type, "Vehicle Type", status)) return;
             ArrayList<VehicleBean> list = customerDAO.viewVehiclesByType(type.getText().trim());
             table.setModel(TableModels.vehicles(list));
             status.setText("Found " + list.size() + " vehicle(s) of type " + type.getText().trim());
@@ -198,6 +199,13 @@ public class CustomerDashboard extends JFrame {
 
         JButton book = new JButton("Book Vehicle");
         book.addActionListener(e -> {
+            if (!FormUtils.require(reservationId, "Reservation ID", status)) return;
+            if (!FormUtils.require(routeId, "Route ID", status)) return;
+            if (!FormUtils.require(vehicleId, "Vehicle ID", status)) return;
+            if (!FormUtils.require(boarding, "Boarding Point", status)) return;
+            if (!FormUtils.require(drop, "Drop Point", status)) return;
+            if (!FormUtils.require(bookingDate, "Booking Date", status)) return;
+            if (!FormUtils.require(journeyDate, "Journey Date", status)) return;
             ReservationBean rb = new ReservationBean();
             rb.setReservationID(reservationId.getText().trim());
             rb.setUserID(currentUserId);
@@ -232,6 +240,7 @@ public class CustomerDashboard extends JFrame {
         JTextField reservationId = new JTextField(12);
         JButton cancel = new JButton("Cancel Booking");
         cancel.addActionListener(e -> {
+            if (!FormUtils.require(reservationId, "Reservation ID", status)) return;
             boolean ok = customerDAO.cancelBooking(currentUserId, reservationId.getText().trim());
             status.setText("cancelBooking → " + ok);
         });
@@ -248,6 +257,7 @@ public class CustomerDashboard extends JFrame {
         out.setEditable(false);
         JButton view = new JButton("View");
         view.addActionListener(e -> {
+            if (!FormUtils.require(reservationId, "Reservation ID", status)) return;
             ReservationBean rb = customerDAO.viewBookingDetails(reservationId.getText().trim());
             out.setText(rb == null ? "Not found" : rb.toString());
         });
@@ -262,6 +272,7 @@ public class CustomerDashboard extends JFrame {
         out.setEditable(false);
         JButton print = new JButton("Print");
         print.addActionListener(e -> {
+            if (!FormUtils.require(reservationId, "Reservation ID", status)) return;
             ReservationBean rb = customerDAO.printBookingDetails(reservationId.getText().trim());
             out.setText(rb == null ? "Not found" : "=== TICKET ===\n" + rb.toString());
         });

@@ -164,6 +164,10 @@ public class AdminDashboard extends JFrame {
         );
         JButton save = new JButton("Add Vehicle");
         save.addActionListener(e -> {
+            if (!FormUtils.require(id, "Vehicle ID", status)) return;
+            if (!FormUtils.require(name, "Name", status)) return;
+            if (!FormUtils.require(type, "Type", status)) return;
+            if (!FormUtils.require(number, "Registration Number", status)) return;
             VehicleBean v = new VehicleBean();
             v.setVehicleID(id.getText().trim());
             v.setName(name.getText().trim());
@@ -203,6 +207,7 @@ public class AdminDashboard extends JFrame {
         JButton update = new JButton("Update");
 
         load.addActionListener(e -> {
+            if (!FormUtils.require(id, "Vehicle ID", status)) return;
             VehicleBean v = adminDAO.viewVehicle(id.getText().trim());
             if (v == null) { status.setText("Vehicle not found"); return; }
             name.setText(v.getName());
@@ -214,6 +219,8 @@ public class AdminDashboard extends JFrame {
         });
 
         update.addActionListener(e -> {
+            if (!FormUtils.require(name, "Name", status)) return;
+            if (!FormUtils.require(type, "Type", status)) return;
             VehicleBean v = new VehicleBean();
             v.setVehicleID(id.getText().trim());
             v.setName(name.getText().trim());
@@ -241,6 +248,7 @@ public class AdminDashboard extends JFrame {
         JTextField ids = new JTextField(40);
         JButton del = new JButton("Delete Vehicles");
         del.addActionListener(e -> {
+            if (!FormUtils.require(ids, "Vehicle IDs", status)) return;
             ArrayList<String> idList = FormUtils.splitIds(ids.getText());
             int count = adminDAO.deleteVehicle(idList);
             status.setText("deleteVehicle → " + count + " removed");
@@ -268,6 +276,9 @@ public class AdminDashboard extends JFrame {
 
         JButton save = new JButton("Add Route");
         save.addActionListener(e -> {
+            if (!FormUtils.require(id, "Route ID", status)) return;
+            if (!FormUtils.require(src, "Source", status)) return;
+            if (!FormUtils.require(dst, "Destination", status)) return;
             RouteBean rb = new RouteBean();
             rb.setRouteID(id.getText().trim());
             rb.setSource(src.getText().trim());
@@ -313,6 +324,7 @@ public class AdminDashboard extends JFrame {
         JButton update = new JButton("Update");
 
         load.addActionListener(e -> {
+            if (!FormUtils.require(id, "Route ID", status)) return;
             RouteBean r = adminDAO.viewRoute(id.getText().trim());
             if (r == null) { status.setText("Route not found"); return; }
             src.setText(r.getSource());
@@ -323,6 +335,8 @@ public class AdminDashboard extends JFrame {
         });
 
         update.addActionListener(e -> {
+            if (!FormUtils.require(src, "Source", status)) return;
+            if (!FormUtils.require(dst, "Destination", status)) return;
             RouteBean rb = new RouteBean();
             rb.setRouteID(id.getText().trim());
             rb.setSource(src.getText().trim());
@@ -372,6 +386,10 @@ public class AdminDashboard extends JFrame {
 
         JButton save = new JButton("Add Driver");
         save.addActionListener(e -> {
+            if (!FormUtils.require(id, "Driver ID", status)) return;
+            if (!FormUtils.require(name, "Name", status)) return;
+            if (!FormUtils.require(mobile, "Mobile No.", status)) return;
+            if (!FormUtils.require(license, "License No.", status)) return;
             DriverBean d = new DriverBean();
             d.setDriverID(id.getText().trim());
             d.setName(name.getText().trim());
@@ -410,11 +428,28 @@ public class AdminDashboard extends JFrame {
         JButton update = new JButton("Update");
 
         load.addActionListener(e -> {
-            // We don’t have viewDriver(id) in DAO; simple scan via view in UI is omitted.
-            status.setText("Load driver → (optional) add a viewDriver method if needed.");
+            if (!FormUtils.require(id, "Driver ID", status)) return;
+
+            DriverBean d = adminDAO.viewDriver(id.getText().trim());
+            if (d == null) {
+                status.setText("ERROR: Driver not found.");
+                return;
+            }
+
+            // Fill form fields
+            name.setText(d.getName());
+            mobile.setText(d.getMobileNo());
+            license.setText(d.getLicenseNumber());
+
+            status.setText("Driver loaded successfully.");
         });
 
+
         update.addActionListener(e -> {
+            if (!FormUtils.require(id, "Driver ID", status)) return;
+            if (!FormUtils.require(name, "Name", status)) return;
+            if (!FormUtils.require(mobile, "Mobile No.", status)) return;
+            if (!FormUtils.require(license, "License No.", status)) return;
             DriverBean d = new DriverBean();
             d.setDriverID(id.getText().trim());
             d.setName(name.getText().trim());
@@ -453,6 +488,8 @@ public class AdminDashboard extends JFrame {
         JButton allot = new JButton("Allot Driver");
 
         allot.addActionListener(e -> {
+            if (!FormUtils.require(reservationId, "Reservation ID", status)) return;
+            if (!FormUtils.require(driverId, "Driver ID", status)) return;
             boolean ok = adminDAO.allotDriver(reservationId.getText().trim(), driverId.getText().trim());
             status.setText("allotDriver → " + ok);
         });
@@ -473,6 +510,9 @@ public class AdminDashboard extends JFrame {
         bookingsTable = new JTable(TableModels.reservations(new ArrayList<>()));
 
         search.addActionListener(e -> {
+            if (!FormUtils.require(date, "Journey Date", status)) return;
+            if (!FormUtils.require(src, "Source", status)) return;
+            if (!FormUtils.require(dst, "Destination", status)) return;
             String d = date.getText().trim();
             if (d == null) { status.setText("Invalid date. Use yyyy-MM-dd"); return; }
             ArrayList<ReservationBean> list =
