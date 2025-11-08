@@ -2,6 +2,7 @@ package com.ust.ui;
 
 import com.ust.bean.*;
 import com.ust.dao.CustomerDAO;
+import com.ust.dao.TripEaseDAO;
 
 import javax.swing.*;
 import java.awt.*;
@@ -131,7 +132,8 @@ public class CustomerDashboard extends JFrame {
             pb.setEmailID(email.getText().trim());
             pb.setPassword(new String(password.getPassword()));
 
-            status.setText("Use TripEaseDAO.register(pb) to persist. (Once you add it in DAO.)");
+			String result = TripEaseDAO.register(pb);
+			status.setText(result);
         });
 
         JPanel f = FormUtils.form(

@@ -48,7 +48,7 @@ public class LauncherCLI {
 			}
 
 			System.out.println("Login Successful!");
-			System.out.println("Logged in as: " + (user.getUserType().equalsIgnoreCase("A") ? "Administrator" : "Customer"));
+			System.out.println("Logged in as: " + (user.getUserType().toString()));
 
 			// ------------------ ROLE BASED MENU -------------------
 			if (user.getUserType().equalsIgnoreCase("Administrator")) {
@@ -258,14 +258,6 @@ public class LauncherCLI {
 				case "US-001":
 					System.out.println("[US-001] Register Profile");
 					ProfileBean p = new ProfileBean();
-
-					// Your DAO register(...) will auto-generate userID,
-					// but we also allow setting it to the logged-in user's ID if desired.
-					// If your DAO ignores p.userID and generates a fresh one, that's fine.
-					// If you want to force use of current user, uncomment next line.
-					// p.setUserID(user.getUserID());
-
-					// FIRST NAME must be >= 2 characters (DAO uses substring(0,2))
 					String fName;
 					while (true) {
 						System.out.print("First Name (>=2 chars): ");

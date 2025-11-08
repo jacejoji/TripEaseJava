@@ -142,14 +142,32 @@ public class AdministratorDAO  implements Administrator{
 	    @Override
 	    public ArrayList<ReservationBean> viewBookingDetails(String journeyDate, String source, String destination) {
 	        ArrayList<ReservationBean> result = new ArrayList<>();
+
+	        // Find the matching RouteID based on source and destination
+	        String routeID = null;
+	        for (RouteBean route : routeList) {
+	            if (route.getSource().equalsIgnoreCase(source) && route.getDestination().equalsIgnoreCase(destination)) {
+	                routeID = route.getRouteID();
+	                break;  // Exit loop once route is found
+	            }
+	        }
+
+	        // If no matching route was found, return empty result
+	        if (routeID == null) {
+	            return result;
+	        }
+
+	        // Now, filter reservations based on routeID and journeyDate
 	        for (ReservationBean reservation : reservationList) {
 	            if (reservation.getJourneyDate().equalsIgnoreCase(journeyDate) &&
-	                reservation.getRouteID().equalsIgnoreCase(source + "-" + destination)) {
+	                reservation.getRouteID().equalsIgnoreCase(routeID)) {
 	                result.add(reservation);
 	            }
 	        }
+
 	        return result;
 	    }
+
 	public DriverBean viewDriver(String driverID) {
 		for (DriverBean d : driverList) {
 			if (d.getDriverID().equalsIgnoreCase(driverID))

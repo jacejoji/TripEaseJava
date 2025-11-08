@@ -49,7 +49,7 @@ public class Launcher {
 
         JButton loginBtn = new JButton("Login");
         JButton changePwdBtn = new JButton("Change Password");
-        JButton logoutBtn = new JButton("Logout");
+        //JButton logoutBtn = new JButton("Logout");
 
         int r = 0;
         gc.gridx = 0; gc.gridy = r; form.add(new JLabel("User ID"), gc);
@@ -61,7 +61,7 @@ public class Launcher {
         JPanel actions = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 0));
         actions.add(loginBtn);
         actions.add(changePwdBtn);
-        actions.add(logoutBtn);
+        //actions.add(logoutBtn);
         gc.gridx = 0; gc.gridy = r; gc.gridwidth = 2;
         form.add(actions, gc);
 
@@ -131,25 +131,25 @@ public class Launcher {
         });
 
 
-        logoutBtn.addActionListener(e -> {
-
-            String uid = userIDField.getText().trim();
-
-            if (uid.isEmpty()) {
-                outputArea.setText("Enter UserID first.");
-                return;
-            }
-
-            boolean ok = tripEaseDAO.logout(uid);
-
-            if (ok) {
-                outputArea.setText("Logout successful.");
-                userIDField.setText("");
-                passwordField.setText("");
-            } else {
-                outputArea.setText("Logout failed. UserID not found or already logged out.");
-            }
-        });
+//        logoutBtn.addActionListener(e -> {
+//
+//            String uid = userIDField.getText().trim();
+//
+//            if (uid.isEmpty()) {
+//                outputArea.setText("Enter UserID first.");
+//                return;
+//            }
+//
+//            boolean ok = tripEaseDAO.logout(uid);
+//
+//            if (ok) {
+//                outputArea.setText("Logout successful.");
+//                userIDField.setText("");
+//                passwordField.setText("");
+//            } else {
+//                outputArea.setText("Logout failed. UserID not found or already logged out.");
+//            }
+//        });
 
 
         frame.setVisible(true);

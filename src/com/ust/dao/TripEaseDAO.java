@@ -47,7 +47,7 @@ public class TripEaseDAO {
 		}
 		return null;
 	}
-	public String register(ProfileBean profile) {
+	public static String register(ProfileBean profile) {
 		String generatedID = profile.getFirstName().substring(0, 2).toUpperCase() +
 				String.format("%04d", userList.size() + 1);
 

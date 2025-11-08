@@ -204,11 +204,12 @@ public class Data {
 
         RouteBean route4 = new RouteBean();
         route4.setRouteID("RT004");
-        route4.setSource("Miami");
-        route4.setDestination("Orlando");
+        route4.setSource("Times Square");
+        route4.setDestination("National Mall");
         route4.setDistance(230);
         route4.setTravelDuration(4); // Hours
         routeList.add(route4);
+        
 
         return routeList;
     }
@@ -220,7 +221,7 @@ public class Data {
         ReservationBean reservation1 = new ReservationBean();
         reservation1.setReservationID("RS001");
         reservation1.setUserID("U001");
-        reservation1.setRouteID("RT001");
+        reservation1.setRouteID("RT004");
         reservation1.setBookingDate("2025-12-01");
         reservation1.setJourneyDate("2025-12-10");
         reservation1.setVehicleID("VH001");
