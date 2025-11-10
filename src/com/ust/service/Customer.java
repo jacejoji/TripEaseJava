@@ -7,7 +7,6 @@ import com.ust.bean.*;
 public interface Customer {
 	 ArrayList<VehicleBean> viewVehiclesByType(String vehicleType);
 	    ArrayList<VehicleBean> viewVehicleBySeats(int noOfSeats);
-
 	    // Route viewing
 	    ArrayList<RouteBean> viewAllRoutes();
 

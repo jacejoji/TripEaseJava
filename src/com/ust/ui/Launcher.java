@@ -1,5 +1,4 @@
 package com.ust.ui;
-
 import com.ust.dao.TripEaseDAO;
 import com.ust.bean.CredentialsBean;
 
@@ -23,7 +22,6 @@ public class Launcher {
         UIManager.put("Table.font", new Font("SansSerif", Font.PLAIN, 14));
         UIManager.put("Table.rowHeight", 26);
         UIManager.put("TableHeader.font", new Font("SansSerif", Font.BOLD, 14));
-
     }
 
     public void show() {
@@ -129,8 +127,6 @@ public class Launcher {
                     break;
             }
         });
-
-
 //        logoutBtn.addActionListener(e -> {
 //
 //            String uid = userIDField.getText().trim();

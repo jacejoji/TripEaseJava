@@ -102,7 +102,6 @@ public class CustomerDAO  implements Customer{
 
       // Save profile in memory
       profileList.add(profileBean);
-
       // ALSO create credentials (so the user can log in)
       CredentialsBean cred = new CredentialsBean();
       cred.setUserID(userID);
