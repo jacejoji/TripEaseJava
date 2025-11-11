@@ -4,21 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c540aba9-669e-4e58-af7f-f52b1c3a6386" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.classpath" beforeDir="false" afterPath="$PROJECT_DIR$/.classpath" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/com/ust/bean/CredentialsBean.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/com/ust/bean/CredentialsBean.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/com/ust/bean/DriverBean.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/com/ust/bean/DriverBean.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/com/ust/bean/ProfileBean.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/com/ust/bean/ProfileBean.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/com/ust/bean/ReservationBean.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/com/ust/bean/ReservationBean.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/com/ust/bean/RouteBean.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/com/ust/bean/RouteBean.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/com/ust/bean/VehicleBean.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/com/ust/bean/VehicleBean.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/com/ust/dao/CustomerDAO.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/com/ust/dao/CustomerDAO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/com/ust/ui/Launcher.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/com/ust/ui/Launcher.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/ust/dao/CustomerDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/ust/dao/CustomerDAO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/ust/service/Customer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/ust/service/Customer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/ust/ui/Launcher.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/ust/ui/Launcher.java" afterDir="false" />
-    </list>
+    <list default="true" id="c540aba9-669e-4e58-af7f-f52b1c3a6386" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -85,7 +71,7 @@
       <workItem from="1762518028097" duration="303000" />
       <workItem from="1762582362525" duration="63000" />
       <workItem from="1762754877266" duration="254000" />
-      <workItem from="1762774257929" duration="103000" />
+      <workItem from="1762774257929" duration="973000" />
     </task>
     <servers />
   </component>

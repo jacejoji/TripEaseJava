@@ -15,10 +15,10 @@ public class TripEaseDAO {
     public static ArrayList<RouteBean> routeList = Data.getRouteData();
     public static ArrayList<ReservationBean> reservationList = Data.getReservationData();
     
+    
     //User authentication
 	public CredentialsBean login(String userID, String password) {
 		for (CredentialsBean user : userList) {
-
 			// Check user id
 			if (user.getUserID().equals(userID)) {
 

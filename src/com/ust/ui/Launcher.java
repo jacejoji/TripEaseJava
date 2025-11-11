@@ -1,5 +1,6 @@
 package com.ust.ui;
 import com.ust.dao.TripEaseDAO;
+import com.ust.util.DBUtil;
 import com.ust.bean.CredentialsBean;
 
 import javax.swing.*;
@@ -69,6 +70,7 @@ public class Launcher {
         outputArea = new JTextArea(6, 40);
         outputArea.setEditable(false);
         frame.add(new JScrollPane(outputArea), BorderLayout.SOUTH);
+       outputArea.setText("Database Connection Established with id:"+(String)DBUtil.getDBConnection().toString());
 
         // Wire buttons
         loginBtn.addActionListener(e -> {
