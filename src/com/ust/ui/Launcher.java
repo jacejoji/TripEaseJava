@@ -2,7 +2,6 @@ package com.ust.ui;
 import com.ust.dao.TripEaseDAO;
 import com.ust.util.DBUtil;
 import com.ust.bean.CredentialsBean;
-
 import javax.swing.*;
 import java.awt.*;
 

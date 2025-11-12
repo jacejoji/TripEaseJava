@@ -1,0 +1,88 @@
+-- Table for storing user credentials (Admin/Customer)
+CREATE TABLE ATA_TBL_User_Credentials (
+    Userid VARCHAR(6) PRIMARY KEY,
+    Password VARCHAR(20) NOT NULL,
+    Usertype ENUM('A', 'C') NOT NULL,
+    Loginstatus TINYINT(1) NOT NULL CHECK (Loginstatus IN (0, 1))
+);
+
+-- Table for storing user profile details
+CREATE TABLE ATA_TBL_User_Profile (
+    UserId VARCHAR(6) PRIMARY KEY,
+    Firstname VARCHAR(15) NOT NULL,
+    Lastname VARCHAR(15) NOT NULL,
+    Dateofbirth DATE NOT NULL,
+    Gender VARCHAR(7) NOT NULL,
+    Street VARCHAR(30) NOT NULL,
+    Location VARCHAR(15) NOT NULL,
+    City VARCHAR(15) NOT NULL,
+    State VARCHAR(15) NOT NULL,
+    Pincode VARCHAR(6) NOT NULL,
+    MobileNo VARCHAR(10) NOT NULL,
+    EmailId VARCHAR(30),
+    FOREIGN KEY (UserId) REFERENCES ATA_TBL_User_Credentials(Userid)
+);
+
+-- Table for storing vehicle details
+CREATE TABLE ATA_TBL_Vehicle (
+    VehicleId VARCHAR(6) PRIMARY KEY,
+    Name VARCHAR(20) NOT NULL,
+    Type VARCHAR(8) NOT NULL,
+    RegistrationNumber VARCHAR(12) NOT NULL,
+    SeatingCapacity INT NOT NULL,
+    FarePerKM DECIMAL(5,2)
+);
+
+-- Table for storing driver details
+CREATE TABLE ATA_TBL_Driver (
+    DriverId VARCHAR(6) PRIMARY KEY,
+    Name VARCHAR(25) NOT NULL,
+    Street VARCHAR(30) NOT NULL,
+    Location VARCHAR(15) NOT NULL,
+    City VARCHAR(15) NOT NULL,
+    State VARCHAR(15) NOT NULL,
+    Pincode VARCHAR(6) NOT NULL,
+    MobileNo VARCHAR(10) NOT NULL,
+    LicenseNumber VARCHAR(20) UNIQUE NOT NULL
+);
+
+-- Table for storing route details
+CREATE TABLE ATA_TBL_Route (
+    RouteId VARCHAR(8) PRIMARY KEY,
+    Source VARCHAR(20) NOT NULL,
+    Destination VARCHAR(20) NOT NULL,
+    Distance INT NOT NULL,
+    TravelDuration INT NOT NULL
+);
+
+-- Table for storing reservation details
+CREATE TABLE ATA_TBL_Reservation (
+    ReservationId VARCHAR(6) PRIMARY KEY,
+    UserId VARCHAR(6),
+    VehicleId VARCHAR(6),
+    RouteId VARCHAR(8),
+    BookingDate DATE NOT NULL,
+    JourneyDate DATE NOT NULL,
+    DriverId VARCHAR(6),
+    BookingStatus VARCHAR(20) NOT NULL,
+    TotalFare DECIMAL(10,2) NOT NULL,
+    BoardingPoint VARCHAR(30) NOT NULL,
+    DropPoint VARCHAR(30) NOT NULL,
+    FOREIGN KEY (UserId) REFERENCES ATA_TBL_User_Credentials(Userid),
+    FOREIGN KEY (VehicleId) REFERENCES ATA_TBL_Vehicle(VehicleId),
+    FOREIGN KEY (RouteId) REFERENCES ATA_TBL_Route(RouteId),
+    FOREIGN KEY (DriverId) REFERENCES ATA_TBL_Driver(DriverId)
+);
+
+-- Table for storing credit card details
+CREATE TABLE ATA_TBL_CreditCard (
+    CreditCardNumber VARCHAR(16) PRIMARY KEY,
+    ValidFrom VARCHAR(7) NOT NULL,
+    ValidTo VARCHAR(7) NOT NULL,
+    CreditBalance DECIMAL(10,2) NOT NULL,
+    UserId VARCHAR(6),
+    FOREIGN KEY (UserId) REFERENCES ATA_TBL_User_Credentials(Userid)
+);
+
+-- Sequences are not supported in MySQL, so we will use AUTO_INCREMENT for primary keys
+-- Modify the UserId, RouteId, DriverId, VehicleId, and ReservationId columns to use AUTO_INCREMENT in your table definitions when inserting records.
