@@ -1,92 +1,186 @@
 package com.ust.dao;
 
+import com.ust.bean.CredentialsBean;
+import com.ust.util.DBUtil;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.ArrayList;
 
-import com.ust.bean.*;
-import com.ust.service.*;
-import com.ust.util.Data;  
-
+/**
+ * TripEaseDAO: handles authentication and credential operations against
+ * ATA_TBL_User_Credentials table in MySQL.
+ *
+ * Methods:
+ *  - login(userID, password)         : returns CredentialsBean or null
+ *  - changePassword(credentials, newPwd) : returns "SUCCESS" / "INVALID" / "FAIL"
+ *  - logout(userID)                  : returns true if logout succeeded
+ *  - addCredentials(CredentialsBean) : inserts credentials (used during registration)
+ *  - userExists(userID)              : checks if a user exists
+ */
 public class TripEaseDAO {
-    // Fetching data from DataUtil
-    public static ArrayList<CredentialsBean> userList = Data.getLoginData();
-    public static ArrayList<ProfileBean> profileList = Data.getProfileData();
-    public static ArrayList<VehicleBean> vehicleList = Data.getVehicleData();
-    public static ArrayList<DriverBean> driverList = Data.getDriverData();
-    public static ArrayList<RouteBean> routeList = Data.getRouteData();
-    public static ArrayList<ReservationBean> reservationList = Data.getReservationData();
-    
-    
-    //User authentication
-	public CredentialsBean login(String userID, String password) {
-		for (CredentialsBean user : userList) {
-			// Check user id
-			if (user.getUserID().equals(userID)) {
 
-				// Check password
-				if (user.getPassword().equals(password)) {
+    /**
+     * Attempt login. If successful, returns a populated CredentialsBean and
+     * sets Loginstatus=1 in DB.
+     */
+    public CredentialsBean login(String userID, String password) {
+        String sql = "SELECT Userid, Password, Usertype, Loginstatus FROM ATA_TBL_User_Credentials WHERE Userid = ? AND Password = ?";
+        try (Connection con = DBUtil.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
 
-					// Mark logged in
-					user.setLoginStatus(1);
+            ps.setString(1, userID);
+            ps.setString(2, password);
 
-					// VERY IMPORTANT: return the user with correct userType
-					return user;
-				} else {
-					return null; // password mismatch
-				}
-			}
-		}
-		return null; // user not found
-	}
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    CredentialsBean cb = new CredentialsBean();
+                    cb.setUserID(rs.getString("Userid"));
+                    cb.setPassword(rs.getString("Password"));
+                    // Map DB 'A'/'C' to your previous UI strings if needed.
+                    // We'll keep whatever Usertype string is stored ('A' or 'C').
+                    cb.setUserType(rs.getString("Usertype"));
+                    cb.setLoginStatus(rs.getInt("Loginstatus"));
 
-	//View Profile
-	public ProfileBean viewProfile(String userID) {
-		for (ProfileBean profile : profileList) {
-			if (profile.getUserID().equals(userID)) {
-				return profile;
-			}
-		}
-		return null;
-	}
-	public static String register(ProfileBean profile) {
-		String generatedID = profile.getFirstName().substring(0, 2).toUpperCase() +
-				String.format("%04d", userList.size() + 1);
+                    // Update loginstatus = 1 (logged in)
+                    setLoginStatus(userID, 1);
 
-		profile.setUserID(generatedID);
+                    return cb;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
-		profileList.add(profile);
+    /**
+     * Change password: validates old password from credentials bean, updates to newPwd.
+     * Returns:
+     *   "SUCCESS" if updated,
+     *   "INVALID" if credentials don't match,
+     *   "FAIL" on other errors.
+     */
+    public String changePassword(CredentialsBean c, String newPwd) {
+        String verifySql = "SELECT Password FROM ATA_TBL_User_Credentials WHERE Userid = ?";
+        String updateSql = "UPDATE ATA_TBL_User_Credentials SET Password = ? WHERE Userid = ?";
 
-		CredentialsBean cred = new CredentialsBean();
-		cred.setUserID(generatedID);
-		cred.setPassword(profile.getPassword());
-		cred.setUserType("C");
-		cred.setLoginStatus(0);
+        try (Connection con = DBUtil.getConnection();
+             PreparedStatement verifyPs = con.prepareStatement(verifySql)) {
 
-		userList.add(cred);
+            verifyPs.setString(1, c.getUserID());
+            try (ResultSet rs = verifyPs.executeQuery()) {
+                if (rs.next()) {
+                    String stored = rs.getString("Password");
+                    if (!stored.equals(c.getPassword())) {
+                        return "INVALID";
+                    }
+                } else {
+                    return "INVALID";
+                }
+            }
 
-		return generatedID;
-	}
-	public String changePassword(CredentialsBean credentials, String newPassword) {
-		for (CredentialsBean user : userList) {
-			if (user.getUserID().equals(credentials.getUserID())) {
-				if (!user.getPassword().equals(credentials.getPassword())) {
-					return "INVALID";
-				}
-				user.setPassword(newPassword);
-				return "SUCCESS";
-			}
-		}
-		return "FAIL";
-	}
-	public boolean logout(String userID) {
-		for (CredentialsBean user : userList) {
-			if (user.getUserID().equals(userID)) {
-				user.setLoginStatus(0);
-				return true;
-			}
-		}
-		return false;
-	}
+            try (PreparedStatement updatePs = con.prepareStatement(updateSql)) {
+                updatePs.setString(1, newPwd);
+                updatePs.setString(2, c.getUserID());
+                int updated = updatePs.executeUpdate();
+                return updated == 1 ? "SUCCESS" : "FAIL";
+            }
 
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "FAIL";
+        }
+    }
 
+    /**
+     * Logout: sets Loginstatus = 0.
+     * Returns true if update affected a row.
+     */
+    public boolean logout(String userID) {
+        return setLoginStatus(userID, 0);
+    }
 
+    /**
+     * Internal helper: set loginstatus value.
+     */
+    private boolean setLoginStatus(String userID, int status) {
+        String sql = "UPDATE ATA_TBL_User_Credentials SET Loginstatus = ? WHERE Userid = ?";
+        try (Connection con = DBUtil.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setInt(1, status);
+            ps.setString(2, userID);
+            int updated = ps.executeUpdate();
+            return updated == 1;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    /**
+     * Insert a credentials record. Returns true on success.
+     * Useful when creating a new profile (register).
+     */
+    public boolean addCredentials(CredentialsBean cred) {
+        String sql = "INSERT INTO ATA_TBL_User_Credentials (Userid, Password, Usertype, Loginstatus) VALUES (?, ?, ?, ?)";
+        try (Connection con = DBUtil.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setString(1, cred.getUserID());
+            ps.setString(2, cred.getPassword());
+            ps.setString(3, cred.getUserType()); // expect 'A' or 'C'
+            ps.setInt(4, cred.getLoginStatus());
+
+            int inserted = ps.executeUpdate();
+            return inserted == 1;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    /**
+     * Check if a user exists in credentials table.
+     */
+    public boolean userExists(String userID) {
+        String sql = "SELECT 1 FROM ATA_TBL_User_Credentials WHERE Userid = ?";
+        try (Connection con = DBUtil.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setString(1, userID);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    /**
+     * Utility: load all credentials (if needed)
+     */
+    public ArrayList<CredentialsBean> loadAllCredentials() {
+        ArrayList<CredentialsBean> list = new ArrayList<>();
+        String sql = "SELECT Userid, Password, Usertype, Loginstatus FROM ATA_TBL_User_Credentials";
+        try (Connection con = DBUtil.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                CredentialsBean cb = new CredentialsBean();
+                cb.setUserID(rs.getString("Userid"));
+                cb.setPassword(rs.getString("Password"));
+                cb.setUserType(rs.getString("Usertype"));
+                cb.setLoginStatus(rs.getInt("Loginstatus"));
+                list.add(cb);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
 }

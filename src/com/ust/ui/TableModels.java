@@ -1,7 +1,8 @@
 package com.ust.ui;
 
 import com.ust.bean.*;
-import com.ust.dao.TripEaseDAO;
+import com.ust.dao.AdministratorDAO;
+import com.ust.dao.CustomerDAO;
 
 import javax.swing.table.AbstractTableModel;
 import java.util.ArrayList;
@@ -9,10 +10,14 @@ import java.util.ArrayList;
 public final class TableModels {
     private TableModels(){}
 
-    // Vehicles
+    // ---------- Vehicles ----------
+    // no-arg: fetch live from DB via CustomerDAO
     public static AbstractTableModel vehicles() {
-        return vehicles(new ArrayList<>(TripEaseDAO.vehicleList));
+        ArrayList<VehicleBean> data = new CustomerDAO().viewVehicles();
+        return vehicles(data);
     }
+
+    // existing overload that uses provided list
     public static AbstractTableModel vehicles(ArrayList<VehicleBean> data) {
         String[] cols = {"ID","Name","Type","Reg No","Seats","Fare/KM"};
         return new AbstractTableModel() {
@@ -21,6 +26,7 @@ public final class TableModels {
             public String getColumnName(int c){ return cols[c]; }
             public Object getValueAt(int r,int c){
                 VehicleBean v = data.get(r);
+                if (v == null) return "";
                 return switch(c){
                     case 0 -> v.getVehicleID();
                     case 1 -> v.getName();
@@ -34,10 +40,12 @@ public final class TableModels {
         };
     }
 
-    // Routes
+    // ---------- Routes ----------
     public static AbstractTableModel routes() {
-        return routes(new ArrayList<>(TripEaseDAO.routeList));
+        ArrayList<RouteBean> data = new CustomerDAO().viewAllRoutes();
+        return routes(data);
     }
+
     public static AbstractTableModel routes(ArrayList<RouteBean> data) {
         String[] cols = {"RouteID","Source","Destination","Distance","Duration"};
         return new AbstractTableModel() {
@@ -46,6 +54,7 @@ public final class TableModels {
             public String getColumnName(int c){ return cols[c]; }
             public Object getValueAt(int r,int c){
                 RouteBean o = data.get(r);
+                if (o == null) return "";
                 return switch(c){
                     case 0 -> o.getRouteID();
                     case 1 -> o.getSource();
@@ -58,7 +67,13 @@ public final class TableModels {
         };
     }
 
-    // Reservations
+    // ---------- Reservations ----------
+    // no-arg: fetch all bookings (admin view) from AdministratorDAO
+    public static AbstractTableModel reservations() {
+        ArrayList<ReservationBean> data = new AdministratorDAO().getAllBookings();
+        return reservations(data);
+    }
+
     public static AbstractTableModel reservations(ArrayList<ReservationBean> data) {
         String[] cols = {"ResID","UserID","VehicleID","RouteID","BookDate","JourneyDate","DriverID","Status","Boarding","Drop","TotalFare"};
         return new AbstractTableModel() {
@@ -67,6 +82,7 @@ public final class TableModels {
             public String getColumnName(int c){ return cols[c]; }
             public Object getValueAt(int r,int c){
                 ReservationBean x = data.get(r);
+                if (x == null) return "";
                 return switch(c){
                     case 0 -> x.getReservationID();
                     case 1 -> x.getUserID();

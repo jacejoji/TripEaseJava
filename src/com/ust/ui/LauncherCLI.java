@@ -288,8 +288,8 @@ public class LauncherCLI {
 					}
 					p.setPassword(pwd);
 
-					String newUserId = tripEaseDAO.register(p);
-					System.out.println("Registered. Generated UserID: " + newUserId);
+					ProfileBean newUserId = customerDAO.registerProfile(p);
+					System.out.println("Registered. Generated UserID: " + newUserId.getUserID());
 					break;
 
 				case "US-002":

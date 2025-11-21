@@ -1,6 +1,7 @@
 package com.ust.ui;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -9,6 +10,10 @@ import java.util.Date;
 
 public final class FormUtils {
     private static final SimpleDateFormat YMD = new SimpleDateFormat("yyyy-MM-dd");
+
+    static {
+        YMD.setLenient(false);
+    }
 
     private FormUtils(){}
 
@@ -29,6 +34,10 @@ public final class FormUtils {
         return p;
     }
 
+    /**
+     * Section helper: creates a titled vertical section and returns a scrollable component.
+     * This keeps the dashboard cards compact while allowing content to scroll when needed.
+     */
     public static JComponent section(String title, JComponent... parts) {
         JPanel outer = new JPanel();
         outer.setLayout(new BoxLayout(outer, BoxLayout.Y_AXIS));
@@ -47,8 +56,8 @@ public final class FormUtils {
         }
 
         JPanel wrapper = new JPanel(new BorderLayout());
-        wrapper.add(outer, BorderLayout.NORTH); // ✅ prevents stretching
-        return new JScrollPane(wrapper);        // ✅ scrollable & compact
+        wrapper.add(outer, BorderLayout.NORTH); // prevents stretching
+        return new JScrollPane(wrapper);        // scrollable & compact
     }
 
 
@@ -83,6 +92,9 @@ public final class FormUtils {
         }
         return list;
     }
+
+    // ---------------------- Validation helpers ----------------------
+
     public static boolean require(JTextField field, String fieldName, JTextArea status) {
         if (field.getText().trim().isEmpty()) {
             status.setText("ERROR: " + fieldName + " cannot be empty.");
@@ -101,4 +113,41 @@ public final class FormUtils {
         return true;
     }
 
+    public static boolean require(JComboBox<?> combo, String fieldName, JTextArea status) {
+        Object sel = combo.getSelectedItem();
+        if (sel == null || String.valueOf(sel).trim().isEmpty()) {
+            status.setText("ERROR: " + fieldName + " must be selected.");
+            combo.requestFocus();
+            return false;
+        }
+        return true;
+    }
+
+    public static boolean require(JSpinner spinner, String fieldName, JTextArea status) {
+        Object val = spinner.getValue();
+        if (val == null) {
+            status.setText("ERROR: " + fieldName + " cannot be empty.");
+            spinner.requestFocus();
+            return false;
+        }
+        // if it's a number ensure positive
+        if (val instanceof Number) {
+            double d = ((Number) val).doubleValue();
+            if (d <= 0) {
+                status.setText("ERROR: " + fieldName + " must be greater than zero.");
+                spinner.requestFocus();
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static boolean require(JTextArea area, String fieldName, JTextArea status) {
+        if (area.getText().trim().isEmpty()) {
+            status.setText("ERROR: " + fieldName + " cannot be empty.");
+            area.requestFocus();
+            return false;
+        }
+        return true;
+    }
 }
